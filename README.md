@@ -5,7 +5,7 @@
 
 # Tools
 - Scala
-- InteliJ Ultimate
+- IntelliJ Ultimate
 - GitHub
 
 # Was tut mein Programm?
