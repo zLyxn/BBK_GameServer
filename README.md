@@ -1,16 +1,43 @@
 # Namen Idee
-- Space Engine
+- Lunar Star Survive
+- Solar Starfarers
+- Mission: Far Star
 
-# Programmiersprache
-Scala  
+# Tools
+- Scala
+- InteliJ Ultimate
+- GitHub
 
 # Was tut mein Programm?
+Es gibt verschiedene Senarien und Events, welche passieren können:
 
-## Spiele Starten
- Zeitbasiert
- Eventtrigger
- 
+## Spiele bei Clients Starten
+ - Zeitbasiert
+ - Eventtrigger
+
 ## Spiele Auswerten
-Wartet auf Antwort
-Verarbeitet, ob die Aufgabe erfolgreich war
-Sendet Einfluss auf andere Spieler
+- Wartet auf Antwort
+- Verarbeitet, ob die Aufgabe erfolgreich war
+- Sendet Einfluss auf andere Spieler
+
+## Direkte Trigger
+- z.B. Kolision -> Schlechtere Werte -> Kapitän, Polit
+- z.B. Abgeschossen -> Pilot freie Bahn
+- Wenn sich ein Wert updatet, alle Werte broadcasten
+- Rest von Teamleitern
+
+# Struktur
+
+## Klassen
+![Class](https://mermaid.ink/svg/pako:eNp1kstqxDAMRX_FeNXSmR8I3U1nUSh0IIuBko1IlETUlo0fhZDm35vmMZkkrVfW1dWR_GhlbgqUicwVeP9CUDnQGYt-nRQhB_H8fTyKE9gAxPvEhZQJe_nMFTGi22euCNawfy9Lyn_zo2PoPvnaURLiKQ2OuBKvl5ty5qhFGiBEP5d2G8Y46QKhvjMyuqp5wy9UK93XhKqYeXeJMs7ODX447wIvVfPw-KdxvoF229Bu2jm0QO4fyvq21izQOjIFMryMQw6nkjugPEiNTgMV_TsPjEyGGjVmMum3BbjPTGbc9T6IwaQN5zIJLuJBOhOrWiYlKN9H0RYQcPokN9UCfxgzx90PTPO9Fg)
+- UI/Web-Server
+    - Starten
+    - Stoppen
+    - Konsole
+- Backend
+    - ConnectionEngine (Verbindung)
+    - GameEngine
+        - Ship (Eignschaftswerte)
+        - Spielteil (Werte)
+
+## 
