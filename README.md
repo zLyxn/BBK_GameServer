@@ -40,4 +40,8 @@ Es gibt verschiedene Senarien und Events, welche passieren können:
         - Ship (Eignschaftswerte)
         - Spielteil (Werte)
 
-## 
+# Kommunikation
+- Verbindung über TCP
+- Immer mit Prefix: #
+- Immer mit Schlagwort nach dem Hashtag, und die Werte mit Doppelpunkt trennen.
+- Beispiel: Senden der Info, dass das Schiff 2 von 5 Leben hat: #health:2:5
