@@ -19,6 +19,8 @@ class ConnectionEngine(port: Int) {
     }
   }
   
+  def isRunning() = running
+  
   def stop(): Unit = {
     running = false
     serverSocket.close()
