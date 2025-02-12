@@ -10,53 +10,50 @@ class WebServer(connectionEngine: ConnectionEngine):
   def start(): Unit =
     server.createContext("/", exchange =>
       val response = """
-          <!DOCTYPE html>
-          <html lang="en">
-          <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Dashboard</title>
-            <style>
-              body { font-family: Arial, sans-serif; text-align: center; }
-              .status { font-weight: bold; }
-              .online { color: green; }
-              .offline { color: red; }
-            </style>
-            <script>
-              async function checkServerStatus(url, elementId) {
-                try {
-                  const response = await fetch(url, { method: 'HEAD' });
-                  if (response.ok) {
-                    document.getElementById(elementId).innerText = "Online";
-                    document.getElementById(elementId).className = "status online";
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Dashboard</title>
+          <style>
+            body { font-family: Arial, sans-serif; text-align: center; }
+            .status { font-weight: bold; }
+            .online { color: green; }
+            .offline { color: red; }
+          </style>
+          <script>
+            function updateGameServerStatus() {
+              fetch('/status')
+                .then(response => response.text())
+                .then(status => {
+                  const gameServerStatus = document.getElementById('gameServerStatus');
+                  if (status.includes("true")) {
+                    gameServerStatus.textContent = "Online";
+                    gameServerStatus.className = "status online";
                   } else {
-                    throw new Error();
+                    gameServerStatus.textContent = "Offline";
+                    gameServerStatus.className = "status offline";
                   }
-                } catch (error) {
-                  document.getElementById(elementId).innerText = "Offline";
-                  document.getElementById(elementId).className = "status offline";
-                }
-              }
+                })
+                .catch(error => {
+                  console.error("Error fetching status:", error);
+                });
+            }
 
-              function updateStatus() {
-                //checkServerStatus("http://localhost:80/status", "gameServerStatus");
-                //checkServerStatus("http://localhost:80", "webServerStatus");
-                console.log("Updates are disabled for now.");
-              }
-
-              //setInterval(updateStatus, 5000); // Update every 5 seconds
-              window.onload = updateStatus;
-            </script>
-          </head>
-          <body>
-            <h1>Welcome to the Dashboard!</h1>
-            <p>Game Server: <span id="gameServerStatus" class="status">Checking...</span></p>
-            <p>Web Server: <span id="webServerStatus" class="status">Checking...</span></p>
-            <a href="/start">Start the GameServer</a><br>
-            <a href="/stop">Stop the GameServer</a><br>
-            <a href="/exit">Stop the WebServer</a>
-          </body>
-          </html>
+            setInterval(updateGameServerStatus, 5000);
+            window.onload = updateGameServerStatus;
+          </script>
+        </head>
+        <body>
+          <h1>Welcome to the Dashboard!</h1>
+          <p>Game Server: <span id="gameServerStatus" class="status">Checking...</span></p>
+          <p>Web Server: <span id="webServerStatus" class="status">Checking...</span></p>
+          <a href="/start">Start the GameServer</a><br>
+          <a href="/stop">Stop the GameServer</a><br>
+          <a href="/exit">Stop the WebServer</a>
+        </body>
+        </html>
         """
 
       sendResponse(exchange, 200, response)
