@@ -57,8 +57,8 @@ Es gibt verschiedene Senarien und Events, welche passieren können:
     - Engineer: Verbrauch durch Upgrades und reparieren bei ausfällen durch andere Rollen
   - Gewinnung
     - Pilot: ???
-    - WeaponsOfficer: Abschießen der richtigen Feinden
-    - Engineer: 
+    - WeaponsOfficer: Abschießen der richtigen Feinden koordiniert durch Kapitän
+    - Engineer: ???
 
 - Leben
   - Schaden durch kollisionen vom Piloten
@@ -68,3 +68,4 @@ Es gibt verschiedene Senarien und Events, welche passieren können:
  - Ressistenz:
    - Verbessern und Reparieren durch Engineer
    - Schaden durch kollisionen vom Piloten
+   - benötigt um Schaden für Leben bei Kollision berechnen
