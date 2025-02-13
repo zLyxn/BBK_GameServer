@@ -7,10 +7,11 @@ import scala.io.BufferedSource
 class ConnectionEngine(port: Int) {
   private val serverSocket = new ServerSocket(port)
   private val clients = ListBuffer[Client]()
-  @volatile private var running = true
+  @volatile private var running = false
 
   def start(): Unit = {
     println(s"Server is running on port $port...")
+    running = true
     while (running) {
       val socket = serverSocket.accept()
       val client = new Client(socket)
@@ -18,6 +19,8 @@ class ConnectionEngine(port: Int) {
       new Thread(() => handleClient(client)).start()
     }
   }
+  
+  def isRunning() = running
   
   def stop(): Unit = {
     running = false
