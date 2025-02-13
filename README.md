@@ -1,3 +1,4 @@
+
 # Namen Idee
 - Lunar Star Survive
 - Solar Starfarers
@@ -39,9 +40,31 @@ Es gibt verschiedene Senarien und Events, welche passieren können:
     - GameEngine
         - Ship (Eignschaftswerte)
         - Spielteil (Werte)
+- GameEngine
 
 # Kommunikation
 - Verbindung über TCP
 - Immer mit Prefix: #
 - Immer mit Schlagwort nach dem Hashtag, und die Werte mit Doppelpunkt trennen.
 - Beispiel: Senden der Info, dass das Schiff 2 von 5 Leben hat: #health:2:5
+
+# Aufgaben
+## GameEngine
+- Energie berechnen
+  - Verbrauch:
+    - Pilot: Verbrauch durch bewegung
+    - WeaponsOfficer: Verbracuh durch schießen
+    - Engineer: Verbrauch durch Upgrades und reparieren bei ausfällen durch andere Rollen
+  - Gewinnung
+    - Pilot: ???
+    - WeaponsOfficer: Abschießen der richtigen Feinden
+    - Engineer: 
+
+- Leben
+  - Schaden durch kollisionen vom Piloten
+  - Bie 0 ist das Spiel verloren
+  - Regenerieren langsam
+
+ - Ressistenz:
+   - Verbessern und Reparieren durch Engineer
+   - Schaden durch kollisionen vom Piloten
