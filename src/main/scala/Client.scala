@@ -6,6 +6,7 @@ import java.net.Socket
 class Client(val socket: Socket) {
   val ip: String = socket.getInetAddress.getHostAddress
   var status: String = "Connecting"
+  var role: String = "unknown"
 
   def disconnect(): Unit = {
     try {

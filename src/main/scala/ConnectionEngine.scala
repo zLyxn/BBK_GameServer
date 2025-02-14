@@ -53,7 +53,7 @@ class ConnectionEngine(port: Int) {
     for (line <- input) {
       println(line)
       if (line.startsWith("#")) { // Only process commands starting with #
-        val response = processCommand(line)
+        val response = processCommand(line, client)
         output.write((response + "\r\n").getBytes)
         output.flush()
         println(s"${response}")
@@ -83,13 +83,16 @@ class ConnectionEngine(port: Int) {
     println(s"Client disconnected: ${client.ip}")
   }
 
-  private def processCommand(command: String): String = {
+  private def processCommand(command: String, client: Client): String = {
     val parts = command.stripSuffix("\r\n").split(":") // Remove \r\n and split
     parts.head match {
       case "#ping" => "PONG"
       case "#status" => "Server is running"
       case "#health" if parts.length == 3 => s"Health:${parts(1)}/${parts(2)}"
+      case "#role" if parts.length == 2 => registerRole(client, parts(1)); s"Role set to ${parts(1)}"
       case _ => "error:Unknown command"
     }
   }
+
+  private def registerRole(client: Client, role: String): Unit = client.role = role
 }
