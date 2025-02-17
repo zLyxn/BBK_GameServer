@@ -4,5 +4,9 @@ package org.bbk.gameserver
   val server = new ConnectionEngine(9999)
   val webServer = new WebServer(server)
   webServer.start()
+  sys.addShutdownHook {
+    webServer.stop()
+    server.stop()
+  }
 }
 
