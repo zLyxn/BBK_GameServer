@@ -101,7 +101,7 @@ class ConnectionEngine(port: Int) {
     role match {
       case "Captain" => new Engineer(client.socket)
       case "Engineer" => new Engineer(client.socket)
-
+      case "Pilot" => new Pilot(client.socket)
       case "WeaponsOfficer" => new WeaponsOfficer(client.socket)
       case _ => println(s"Unknown role: $role")
     }
