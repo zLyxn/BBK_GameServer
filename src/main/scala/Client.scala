@@ -20,4 +20,10 @@ class Client(val socket: Socket) {
         e.printStackTrace()
     }
   }
+  
+  def sendMessage(message: String): Unit = {
+    val output = this.socket.getOutputStream
+    output.write((message + "\r\n").getBytes)
+    output.flush()
+  }
 }
