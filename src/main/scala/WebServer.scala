@@ -75,7 +75,7 @@ class WebServer(connectionEngine: ConnectionEngine):
       stop()
     )
     server.createContext("/status", exchange =>
-      val response = s"<html><body>${connectionEngine.isRunning()}</body></html>" //<a href="/">Return to dashboard</a>
+      val response = s"<html><body>${connectionEngine.isRunning}</body></html>" //<a href="/">Return to dashboard</a>
       sendResponse(exchange, 200, response)
     )
 
