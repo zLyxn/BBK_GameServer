@@ -9,4 +9,3 @@ package org.bbk.gameserver
     server.stop()
   }
 }
-
