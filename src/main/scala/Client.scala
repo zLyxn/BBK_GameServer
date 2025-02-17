@@ -26,4 +26,7 @@ class Client(val socket: Socket) {
     output.write((message + "\r\n").getBytes)
     output.flush()
   }
+  def sendStart(): Unit =  sendMessage("#game:start")
+  def sendLoss(): Unit =  sendMessage("#game:over")
+  def sendWin(): Unit =  sendMessage("#game:won")
 }
