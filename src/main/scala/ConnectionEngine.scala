@@ -8,6 +8,8 @@ import scala.io.BufferedSource
 class ConnectionEngine(port: Int) {
   private var serverSocket = new ServerSocket(port)
   private val clients = ListBuffer[Client]()
+  type Player = Captain | Engineer
+  var playerList = ListBuffer[Player]()
   @volatile private var running = false
 
   def start(): Unit = {
@@ -94,5 +96,16 @@ class ConnectionEngine(port: Int) {
     }
   }
 
-  private def registerRole(client: Client, role: String): Unit = client.role = role
+  private def registerRole(client: Client, role: String): Unit = {
+
+    role match {
+      case "Captain" => new Engineer(client.socket)
+      case "Engineer" => new Engineer(client.socket)
+      case _ => println(s"Unknown role: $role")
+    }
+  }
+
+  private def savePlayer(client: Player): Unit = {
+    playerList += client
+  }
 }
