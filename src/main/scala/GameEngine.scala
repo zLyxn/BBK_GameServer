@@ -24,4 +24,9 @@ class GameEngine {
   object ShipSpeed extends AbstractValue(100, 100)
   var meteorAmount: Int = 0
   var repairColor: Color = Color.None
+  
+  def gamestart(): Unit = 0
+  def gamedone(): Unit = 0
+  def gameover(): Unit = 0
+  def gamewon(): Unit = 0
 }
