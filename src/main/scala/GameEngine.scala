@@ -16,15 +16,21 @@ class GameEngine {
     def asString: String = this.toString
   }
 
-  case class AbstractValue(value: Int, max: Int) //TODO change name
+  class Stat(var value: Int, val max: Int) {
+    def setValue(newValue: Int): Unit = {
+      value = newValue.max(0).min(max)
+    }
+  }
 
-  object Health extends AbstractValue(100, 100)
-  object ShieldHealth extends AbstractValue(100, 100)
-  object Energy extends AbstractValue(100, 100)
-  object ShipSpeed extends AbstractValue(100, 100)
+  object Health extends Stat(100, 100)
+  object ShieldHealth extends Stat(100, 100)
+  object Energy extends Stat(100, 100)
+  object ShipSpeed extends Stat(100, 100)
   var meteorAmount: Int = 0
   var repairColor: Color = Color.None
-  
+
+  def hitMeteor(meteorColor: Color): Unit = 0
+
   def gamestart(): Unit = 0
   def gamedone(): Unit = 0
   def gameover(): Unit = 0
