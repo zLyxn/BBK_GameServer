@@ -6,10 +6,10 @@ import scala.io.BufferedSource
 
 class ConnectionEngine(port: Int) {
   private var serverSocket = new ServerSocket(port)
-  private val clients = ListBuffer[Client]()
-  type Player = Captain | Engineer | Pilot | WeaponsOfficer
-  var playerList = ListBuffer[Player]()
+  private val pendingClients = ListBuffer[Client]()
   @volatile private var running = false
+
+  private val gameengine = new GameEngine
 
   def start(): Unit = {
     println(s"Server is running on port $port...")
@@ -19,7 +19,7 @@ class ConnectionEngine(port: Int) {
       try {
         val socket = serverSocket.accept()
         val client = new Client(socket)
-        clients += client
+        pendingClients += client
         new Thread(() => handleClient(client)).start()
       } catch {
         case e: SocketException =>
@@ -40,7 +40,14 @@ class ConnectionEngine(port: Int) {
     println("Server stopped.")
   }
   
-  private def closeAllConections(): Unit = for (client <- clients) client.disconnect()
+  private def closeAllConections(): Unit ={
+    pendingClients.foreach(_.disconnect())
+    pendingClients.clear()
+    //gameengine.removeRole()
+    
+    // playerlist -> foreach: client von player disconnecten
+  } 
+  // TODO: Nutzen um Player disconecten
 
   private def handleClient(client: Client): Unit = {
     try {
@@ -85,8 +92,9 @@ class ConnectionEngine(port: Int) {
 
   private def cleanUpClientResources(client: Client): Unit = {
     client.disconnect()
-    clients -= client
-    removePlayer(client)
+    pendingClients -= client
+    gameengine.removeRole(client)
+    // TODO: Client returnen zum disconecten
     println(s"Client disconnected: ${client.ip}")
   }
 
@@ -96,36 +104,8 @@ class ConnectionEngine(port: Int) {
       case "#ping" => "PONG"
       case "#status" => "Server is running"
       case "#health" if parts.length == 3 => s"health:${parts(1)}/${parts(2)}"
-      case "#role" if parts.length == 2 => registerRole(client, parts(1)); s"Role set to ${parts(1)}"
+      case "#role" if parts.length == 2 => gameengine.registerRole(client, parts(1)); pendingClients -= client; s"Role set to ${parts(1)}"
       case _ => "error:Unknown command"
     }
-  }
-
-  private def registerRole(client: Client, role: String): Unit = {
-
-    val players: Option[Player] = role match {
-      case "Captain" => Some(new Captain(client.socket))
-      case "Engineer" => Some(new Engineer(client.socket))
-      case "Pilot" => Some(new Pilot(client.socket))
-      case "WeaponsOfficer" => Some(new WeaponsOfficer(client.socket))
-      case _ =>
-        println(s"Unknown role: $role")
-        None
-    }
-    players.foreach(savePlayer)
-  }
-
-  private def savePlayer(client: Player): Unit = {
-    playerList += client
-  }
-
-  private def removePlayer(client: Client): Unit = {
-    playerList = playerList.filterNot {
-      case player: Captain => player.socket == client.socket
-      case player: Engineer => player.socket == client.socket
-      case player: Pilot => player.socket == client.socket
-      case player: WeaponsOfficer => player.socket == client.socket
-    }
-    println(s"Player removed: ${client.ip}")
   }
 }
