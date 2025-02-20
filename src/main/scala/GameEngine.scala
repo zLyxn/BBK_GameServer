@@ -1,7 +1,5 @@
 package org.bbk.gameserver
 
-import com.sun.tools.attach.VirtualMachine.list
-
 import scala.collection.mutable.ListBuffer
 
 class GameEngine {
