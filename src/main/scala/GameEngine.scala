@@ -5,6 +5,19 @@ import com.sun.tools.attach.VirtualMachine.list
 import scala.collection.mutable.ListBuffer
 
 class GameEngine {
+
+  def debug: String = {
+    s"""
+      Health: ${Health}
+      Energy: ${Energy}
+      ShipSpeed: ${ShipSpeed}
+      Shield: ${Shield}
+      meteorAmount: ${meteorAmount}
+      repairColor: ${repairColor}
+      RESISTANCE: ${RESISTANCE}
+      DAMAGE: ${DAMAGE}
+    """
+  }
   enum Color {
     case Red
     case Blue
@@ -20,20 +33,42 @@ class GameEngine {
     def asString: String = this.toString
   }
 
+  object Color {
+    def toColor(color: String): Color = {
+      val colors = Color.values
+      colors.find(_.toString.equalsIgnoreCase(color)).getOrElse(Color.None)
+    }
+  }
+
   class Stat(var value: Int, val max: Int) {
     def setValue(newValue: Int): Unit = {
       value = newValue.max(0).min(max)
     }
+    def -=(amount: Int): Unit = {
+      setValue(value - amount)
+    }
+
+    override def toString: String = s"Value: ${value} - Max: ${max}"// + "-" * 5 + super.toString
   }
 
   object Health extends Stat(100, 100)
-  object ShieldHealth extends Stat(100, 100)
   object Energy extends Stat(100, 100)
   object ShipSpeed extends Stat(100, 100)
+  var Shield: Boolean = false
   var meteorAmount: Int = 0
   var repairColor: Color = Color.None
+  val RESISTANCE: Float = 0.5
+  val DAMAGE: Int = 10
 
-  def hitMeteor(meteorColor: Color): Unit = ()
+  // TODO: zu viele Vals ohne Caps
+
+  def hitMeteor(meteorColor: Color): Unit = {
+    if(repairColor == meteorColor){
+      // positiv: + neue Energie
+    }else{
+      Health -= (DAMAGE*(1 - (if Shield then RESISTANCE else 0))).toInt
+    }
+  }
 
   def gamestart(): Unit = ()
   def gamedone(): Unit = ()
