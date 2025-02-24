@@ -3,8 +3,6 @@ package org.bbk.gameserver
 import java.net.InetSocketAddress
 import com.sun.net.httpserver.*
 
-import javax.swing.text.html.HTML
-
 class WebServer(connectionEngine: ConnectionEngine):
   private val server = HttpServer.create(new InetSocketAddress(80), 0)
   def start(): Unit =

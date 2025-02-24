@@ -21,12 +21,12 @@ class Client(val socket: Socket) {
     }
   }
   
-  def sendMessage(message: String): Unit = {
+  def pushMessage(message: String): Unit = {
     val output = this.socket.getOutputStream
     output.write((message + "\r\n").getBytes)
     output.flush()
   }
-  def sendStart(): Unit =  sendMessage("#game:start")
-  def sendLoss(): Unit =  sendMessage("#game:over")
-  def sendWin(): Unit =  sendMessage("#game:won")
+  def pushStart(): Unit =  pushMessage("#game:start")
+  def pushLoss(): Unit =  pushMessage("#game:over")
+  def pushWin(): Unit =  pushMessage("#game:won")
 }
