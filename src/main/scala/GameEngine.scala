@@ -68,7 +68,9 @@ class GameEngine {
     }
   }
 
-  def gamestart(): Unit = ()
+  def gamestart(): Unit = {
+    gameLoop()
+  }
   def gamedone(): Unit = ()
   def gameover(): Unit = ()
   def gamewon(): Unit = ()
@@ -121,5 +123,14 @@ class GameEngine {
 
   def clearPlayers(): ListBuffer[Client] = {
     playerList.clone().map(removeRole)
+  }
+
+  def gameLoop(): Unit = {
+    val thread = new Thread(new Runnable {
+      override def run(): Unit = {
+        // Your game loop logic here
+      }
+    })
+    thread.start()
   }
 }
