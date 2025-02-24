@@ -1,4 +1,3 @@
-
 # Namen Idee
 - Lunar Star Survive
 - Solar Starfarers
@@ -65,7 +64,40 @@ Es gibt verschiedene Senarien und Events, welche passieren können:
   - Bie 0 ist das Spiel verloren
   - Regenerieren langsam
 
- - Ressistenz:
+ - Resistenz:
    - Verbessern und Reparieren durch Engineer
    - Schaden durch kollisionen vom Piloten
    - benötigt um Schaden für Leben bei Kollision berechnen
+  - GameLoop (siehe unten)
+
+# GameLoop
+## Allgemeiner Verbrauch
+### Energie
+- Energie wird verbraucht durch das Fliegen (Pilot) und schießen (Waffen Offizier)
+- Energie wird gewonnen durch das abschießen (Waffeb Offizier) der richtigen Farben
+### Luft
+- Die Luft wird immer verbraucht und kann schneller verloren gehen, wenn Probleme auftreten
+- Kann durch treffen (Pilot) der richtigen Farben aufgefüllt werden.
+
+## Zufällige Werte
+### Farbe
+- Für Pilots Spiel, die gute Farbe
+- Anzeigen in Kaptain
+- ?? Enginieur Spiel evt.
+### Meteor Amount
+- Schwierigkeit für Pilot (Anzahl)
+- Bei wenig Leben wird einfacher
+
+## Events
+### Maschienen deffekt
+- Ein Bereich des Ingenieurs fällt aus
+- Kann nicht benutzt werden
+- ist wieder einsatzbereit, wenn die richtige Farbe von dem Piloten getroffen wurde.
+ - Antrieb: Pilot kann nicht fliegen
+ - Schild: mehr Schaden
+ - Life support: Wenn die Luft leer ist, haben alle verloren
+### Angriff
+- Pilot & Waffen Offizier sehen ein anderes Raumschiff, welches uns angreift
+- Dabei entsteht Schaden für das Raumschiff
+- Pilot muss Angriffen ausweichen
+- Waffen offizier muss Feind abschießen
