@@ -114,6 +114,6 @@ Die perfekte Formel für die Zeit in Sekunden zwischen der Events
 
 g(x) = M/(1+e^(k*(x-T)))
 
-M = 180
-k = 0.7
-T = 5
+- M = 180
+- k = 0.7
+- T = 5
