@@ -70,6 +70,27 @@ Es gibt verschiedene Senarien und Events, welche passieren können:
    - benötigt um Schaden für Leben bei Kollision berechnen
   - GameLoop (siehe unten)
 
+## GameEvent trait
+- Event Atribute:
+  - trigger: Was passiert (Unit)
+  - start time: Wann beginnt das Event (int)
+  - length: Wie lange bleibt das Event aktiev (option [int])
+  - solve: Kann getriggert werden, wenn Event abgeschlossen ist (Unit)
+### Engine out
+- Pilot kann nicht mehr fliegen
+- Ingenieur muss fixen
+### Weapons broken
+- Waffen Offizier kann nicht mehr schießen
+- Pilot muss etwas einsammeln
+### Shield down
+- Keine Resistenz durch Schilde -> mehr Schaden
+- 20 Sekunden
+### Angriff
+- Pilot & Waffen Offizier sehen ein anderes Raumschiff, welches uns angreift
+- Dabei entsteht Schaden für das Raumschiff
+- Pilot muss Angriffen ausweichen
+- Waffen offizier muss Feind abschießen
+
 # GameLoop
 ## Allgemeiner Verbrauch
 ### Energie
@@ -89,15 +110,10 @@ Es gibt verschiedene Senarien und Events, welche passieren können:
 - Bei wenig Leben wird einfacher
 
 ## Events
-### Maschienen deffekt
-- Ein Bereich des Ingenieurs fällt aus
-- Kann nicht benutzt werden
-- ist wieder einsatzbereit, wenn die richtige Farbe von dem Piloten getroffen wurde.
- - Antrieb: Pilot kann nicht fliegen
- - Schild: mehr Schaden
- - Life support: Wenn die Luft leer ist, haben alle verloren
-### Angriff
-- Pilot & Waffen Offizier sehen ein anderes Raumschiff, welches uns angreift
-- Dabei entsteht Schaden für das Raumschiff
-- Pilot muss Angriffen ausweichen
-- Waffen offizier muss Feind abschießen
+Die perfekte Formel für die Zeit in Sekunden zwischen der Events
+
+g(x) = M/(1+e^(k*(x-T)))
+
+M = 180
+k = 0.7
+T = 5
