@@ -4,6 +4,12 @@ import scala.collection.mutable.ListBuffer
 
 class GameEngine {
 
+  var running: Boolean = true
+  private var nthEvent: Int = 0
+  private val maximumInterval: Int = 60
+  private val slope: Float = 0.7
+  private val horizontalDisplacement: Int = 5
+
   def debug: String = {
     s"""
       Health: ${Health}
@@ -14,6 +20,8 @@ class GameEngine {
       repairColor: ${repairColor}
       RESISTANCE: ${RESISTANCE}
       DAMAGE: ${DAMAGE}
+      nthEvent: ${nthEvent}
+      EventInterval: ${getEventInterval(nthEvent)}
     """
   }
   enum Color {
@@ -125,10 +133,26 @@ class GameEngine {
     playerList.clone().map(removeRole)
   }
 
+  def getEventInterval(nthEvent: Int): Int = {
+    (maximumInterval/(1+ Math.pow(Math.E,(slope*(nthEvent-horizontalDisplacement))))).toInt
+  }
+
   def gameLoop(): Unit = {
     val thread = new Thread(new Runnable {
+      var count: Int = 0
+
       override def run(): Unit = {
-        // Your game loop logic here
+        while (running) {
+          println(s"Temp: $count seconds")
+          count += 1
+          Thread.sleep(1000)
+          var eventInterval = getEventInterval(nthEvent)
+          if count >= eventInterval then {
+            nthEvent += 1
+            count = 0
+            println("Event triggert")
+          }
+        }
       }
     })
     thread.start()
