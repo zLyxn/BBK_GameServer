@@ -2,6 +2,8 @@ package org.bbk.gameserver
 
 import scala.collection.mutable.ListBuffer
 
+type Player = Captain | Engineer | Pilot | WeaponsOfficer
+
 class GameEngine {
 
   var running: Boolean = true
@@ -83,8 +85,7 @@ class GameEngine {
   def gamedone(): Unit = ()
   def gameover(): Unit = ()
   def gamewon(): Unit = ()
-
-  type Player = Captain | Engineer | Pilot | WeaponsOfficer
+  
   private var playerList: ListBuffer[Player] = ListBuffer[Player]()
 
   def registerRole(client: Client, role: String): String = {
