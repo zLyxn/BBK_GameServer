@@ -6,9 +6,10 @@ class GameEngine {
 
   var running: Boolean = true
   private var nthEvent: Int = 0
-  private val maximumInterval: Int = 60
+  private val maximumInterval: Int = 180
   private val slope: Float = 0.7
   private val horizontalDisplacement: Int = 5
+  private val minimumInterval: Int = 30
 
   def debug: String = {
     s"""
@@ -134,7 +135,7 @@ class GameEngine {
   }
 
   def getEventInterval(nthEvent: Int): Int = {
-    (maximumInterval/(1+ Math.pow(Math.E,(slope*(nthEvent-horizontalDisplacement))))).toInt
+    ((maximumInterval-minimumInterval)/(1+ Math.pow(Math.E,(slope*(nthEvent-horizontalDisplacement))))+minimumInterval).toInt
   }
 
   def gameLoop(): Unit = {
@@ -143,14 +144,13 @@ class GameEngine {
 
       override def run(): Unit = {
         while (running) {
-          println(s"Temp: $count seconds")
           count += 1
           Thread.sleep(1000)
           var eventInterval = getEventInterval(nthEvent)
           if count >= eventInterval then {
             nthEvent += 1
+            println(s"Event triggert: ${nthEvent} after ${count} seconds")
             count = 0
-            println("Event triggert")
           }
         }
       }
