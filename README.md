@@ -73,19 +73,23 @@ Es gibt verschiedene Senarien und Events, welche passieren können:
 ## GameEvent trait
 - Event Atribute:
   - trigger: Was passiert (Unit)
+  - solve: Kann getriggert werden, wenn Event abgeschlossen ist (Unit)
   - start time: Wann beginnt das Event (int)
   - length: Wie lange bleibt das Event aktiev (option [int])
-  - solve: Kann getriggert werden, wenn Event abgeschlossen ist (Unit)
-### Engine out
-- Pilot kann nicht mehr fliegen
-- Ingenieur muss fixen
-### Weapons broken
-- Waffen Offizier kann nicht mehr schießen
-- Pilot muss etwas einsammeln
-### Shield down
+### Shield down Event
 - Keine Resistenz durch Schilde -> mehr Schaden
 - 20 Sekunden
-### Angriff
+- Schild wir deaktiviert und kann in der Zeit nicht aktiviert werden
+- Kapitän bekommt nur eine Info zum Beginn des Events
+- Das Ende des Events wird nicht gesagt, es passiert nur im Hintergrund.
+- Nach Ende des Events kann das Schild wieder aktiviert werden, es kommt aber keine Info
+### Engine out Event
+- Pilot kann nicht mehr fliegen
+- Ingenieur muss fixen
+### Weapons broken Event
+- Waffen Offizier kann nicht mehr schießen
+- Pilot muss etwas einsammeln
+### Angriff Event
 - Pilot & Waffen Offizier sehen ein anderes Raumschiff, welches uns angreift
 - Dabei entsteht Schaden für das Raumschiff
 - Pilot muss Angriffen ausweichen
@@ -112,8 +116,9 @@ Es gibt verschiedene Senarien und Events, welche passieren können:
 ## Events
 Die perfekte Formel für die Zeit in Sekunden zwischen der Events
 
-g(x) = M/(1+e^(k*(x-T)))
+g(x) = (M-o)/(1+e^(k*(x-T)))+o
 
 - M = 180
 - k = 0.7
 - T = 5
+- o = 30
