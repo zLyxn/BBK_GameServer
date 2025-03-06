@@ -2,12 +2,11 @@ package org.bbk.gameserver
 
 class ShieldDownEvent extends GameEvent{
 
-  val captain: Option[Player] = None
+  val captain: Option[Captain] = None
   
   override def trigger(): Unit = {
     super.trigger()
-    // an Player Captain eine Nachriht senden
-    //TODO: captain.getOrElse(new Captain).pushMessage("moin")
+    if (captain.nonEmpty) then captain.get.pushEvent(EventType.ShieldDownEvent)
   }
   override def finish(): Unit = isActive = false
   probability = Some(0.9f)

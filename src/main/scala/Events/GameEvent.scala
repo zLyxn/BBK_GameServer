@@ -1,5 +1,9 @@
 package org.bbk.gameserver
 
+enum EventType {
+  case ShieldDownEvent
+}
+
 trait GameEvent {
   var isActive: Boolean = false
   var startTime: Int = 0
