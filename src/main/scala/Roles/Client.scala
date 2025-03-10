@@ -29,4 +29,13 @@ class Client(val socket: Socket) {
   def pushStart(): Unit =  pushMessage("#game:start")
   def pushLoss(): Unit =  pushMessage("#game:over")
   def pushWin(): Unit =  pushMessage("#game:won")
+
+  def handleCommands(parts: Array[String]): Option[String] = {
+    Some(parts.head match {
+      case "#game" => "Game triggert"
+      case _ => handleRoleCommands(parts)
+    })
+  }
+
+  def handleRoleCommands(parts: Array[String]): String = s"error:Unknown command:${parts.head}"
 }

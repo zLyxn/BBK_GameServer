@@ -1,6 +1,7 @@
 package org.bbk.gameserver
 
 import scala.collection.mutable.ListBuffer
+import scala.compiletime.ops.any.==
 
 class GameEngine {
   type Player = Config.Player
@@ -14,69 +15,21 @@ class GameEngine {
 
   def debug: String = {
     s"""
-      Health: ${Health}
-      Energy: ${Energy}
-      ShipSpeed: ${ShipSpeed}
-      Shield: ${Shield}
-      meteorAmount: ${meteorAmount}
-      repairColor: ${repairColor}
-      RESISTANCE: ${RESISTANCE}
-      DAMAGE: ${DAMAGE}
+      Health: ${Ship.Health}
+      Energy: ${Ship.Energy}
+      ShipSpeed: ${Ship.ShipSpeed}
+      Shield: ${Ship.Shield}
+      meteorAmount: ${Ship.meteorAmount}
+      repairColor: ${Ship.repairColor}
+      RESISTANCE: ${Ship.RESISTANCE}
+      DAMAGE: ${Ship.DAMAGE}
       nthEvent: ${nthEvent}
       EventInterval: ${getEventInterval(nthEvent)}
     """
   }
-  enum Color {
-    case Red
-    case Blue
-    case Green
-    case Yellow
-    case Purple
-    case Orange
-    case Black
-    case White
-    case Grey
-    case None
-
-    def asString: String = this.toString
-  }
-
-  object Color {
-    def toColor(color: String): Color = {
-      val colors = Color.values
-      colors.find(_.toString.equalsIgnoreCase(color)).getOrElse(Color.None)
-    }
-  }
-
-  class Stat(var value: Int, val max: Int) {
-    def setValue(newValue: Int): Unit = {
-      value = newValue.max(0).min(max)
-    }
-    def -=(amount: Int): Unit = {
-      setValue(value - amount)
-    }
-
-    override def toString: String = s"Value: ${value} - Max: ${max}"// + "-" * 5 + super.toString
-  }
-
-  object Health extends Stat(100, 100)
-  object Energy extends Stat(100, 100)
-  object ShipSpeed extends Stat(100, 100)
-  var Shield: Boolean = false
-  var meteorAmount: Int = 0
-  var repairColor: Color = Color.None
-  val RESISTANCE: Float = 0.5
-  val DAMAGE: Int = 10
 
   // TODO: zu viele Vals ohne Caps
-
-  def hitMeteor(meteorColor: Color): Unit = {
-    if(repairColor == meteorColor){
-      // positiv: + neue Energie
-    }else{
-      Health -= (DAMAGE*(1 - (if Shield then RESISTANCE else 0))).toInt
-    }
-  }
+  
 
   def gamestart(): Unit = {
     gameLoop()
@@ -136,6 +89,23 @@ class GameEngine {
 
   def getEventInterval(nthEvent: Int): Int = {
     ((maximumInterval-minimumInterval)/(1+ Math.pow(Math.E,(slope*(nthEvent-horizontalDisplacement))))+minimumInterval).toInt
+  }
+
+  def handleCommands(parts: Array[String], client: Client): String = {
+    val player = playerList.find(_.socket == client.socket)
+    player match {
+      case Some(p) => handlePlayerCommands(parts, p)
+      case None => s"Player not found for client: ${client.ip}"
+    }
+  }
+
+  def handlePlayerCommands(parts: Array[String], player: Player): String = {
+    val commandResult = player.handleCommands(parts)
+    if (commandResult.isEmpty) {
+      s"error:Unknown command:${parts.head}"
+    } else {
+      commandResult.get
+    }
   }
 
   def gameLoop(): Unit = {

@@ -105,10 +105,9 @@ class ConnectionEngine(port: Int) {
       case "#status" => "Server is running"
       case "#health" if parts.length == 3 => s"health:${parts(1)}/${parts(2)}"
       case "#role" if parts.length == 2 => gameengine.registerRole(client, parts(1)); pendingClients -= client; s"Role set to ${parts(1)}"
-      case "#hitmeteor" if parts.length == 2 => gameengine.hitMeteor(gameengine.Color.toColor(parts(1))); ""
       case "#start" => gameengine.gamestart(); ""
       case "#debug" => gameengine.debug
-      case _ => "error:Unknown command"
+      case _ => gameengine.handleCommands(parts, client)
     }
   }
 }
