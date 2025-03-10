@@ -2,9 +2,8 @@ package org.bbk.gameserver
 
 import scala.collection.mutable.ListBuffer
 
-type Player = Captain | Engineer | Pilot | WeaponsOfficer
-
 class GameEngine {
+  type Player = Config.Player
 
   var running: Boolean = true
   private var nthEvent: Int = 0
