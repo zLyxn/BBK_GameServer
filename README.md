@@ -20,8 +20,14 @@ Es gibt verschiedene Senarien und Events, welche passieren können:
 - Verarbeitet, ob die Aufgabe erfolgreich war
 - Sendet Einfluss auf andere Spieler
 
+## Engineer
+### color Connection
+- Mehrere Punkte immer zwei Pro Farbe
+- Die zwei Punkte mit der gleichen Farbe müssen verbunden werden
+- Die verbindungs Linien dürfen sich nicht kreuzen
+
 ## Direkte Trigger
-- z.B. Kolision -> Schlechtere Werte -> Kapitän, Polit
+- z.B. Kolision -> Schlechtere Werte -> Kapitän, Pilot
 - z.B. Abgeschossen -> Pilot freie Bahn
 - Wenn sich ein Wert updatet, alle Werte broadcasten
 - Rest von Teamleitern
@@ -86,6 +92,7 @@ Es gibt verschiedene Senarien und Events, welche passieren können:
 ### Engine out Event
 - Pilot kann nicht mehr fliegen
 - Ingenieur muss fixen
+- Wenn Ingenieur gelöst hat, wird NICHTS gesendet / angezeigt, der Ingenieur muss im Reallife Kommunizieren, dass das Event vorbei ist.
 ### Weapons broken Event
 - Waffen Offizier kann nicht mehr schießen
 - Pilot muss etwas einsammeln
