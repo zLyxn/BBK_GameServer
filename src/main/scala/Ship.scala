@@ -5,6 +5,9 @@ object Ship {
     def setValue(newValue: Int): Unit = {
       value = newValue.max(0).min(max)
     }
+    def +=(amount: Int): Unit = {
+      setValue(value + amount)
+    }
     def -=(amount: Int): Unit = {
       setValue(value - amount)
     }
@@ -18,6 +21,4 @@ object Ship {
   var Shield: Boolean = false
   var meteorAmount: Int = 0
   var repairColor: Color = Color.None
-  val RESISTANCE: Float = 0.5
-  val DAMAGE: Int = 10
 }

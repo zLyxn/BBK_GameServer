@@ -26,9 +26,10 @@ class Client(val socket: Socket) {
     output.write((message + "\r\n").getBytes)
     output.flush()
   }
+  def pushData(): Unit = ()
   def pushStart(): Unit =  pushMessage("#game:start")
   def pushLoss(): Unit =  pushMessage("#game:over")
-  def pushWin(): Unit =  pushMessage("#game:won")
+  def pushWin(): Unit =  pushMessage("#game:won") // TODO: Wann haben wir gewonnen?
 
   def handleCommands(parts: Array[String]): Option[String] = {
     Some(parts.head match {

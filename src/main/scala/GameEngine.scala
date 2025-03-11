@@ -21,11 +21,12 @@ class GameEngine {
       Shield: ${Ship.Shield}
       meteorAmount: ${Ship.meteorAmount}
       repairColor: ${Ship.repairColor}
-      RESISTANCE: ${Ship.RESISTANCE}
-      DAMAGE: ${Ship.DAMAGE}
       nthEvent: ${nthEvent}
       EventInterval: ${getEventInterval(nthEvent)}
     """
+    /*RESISTANCE: ${Config.Ship.RESISTANCE}
+    DAMAGE: ${Config.Ship.DAMAGE}
+    ENERGY_GAIN: ${Config.Ship.ENERGY_GAIN}*/
   }
 
   // TODO: zu viele Vals ohne Caps
@@ -109,7 +110,12 @@ class GameEngine {
   }
 
   def gameLoop(): Unit = {
-    val thread = new Thread(new Runnable {
+    eventLoop()
+    dataLoop()
+  }
+
+  private def eventLoop(): Unit = {
+    val eventLoop = new Thread(new Runnable {
       var count: Int = 0
 
       override def run(): Unit = {
@@ -119,12 +125,25 @@ class GameEngine {
           var eventInterval = getEventInterval(nthEvent)
           if count >= eventInterval then {
             nthEvent += 1
-            println(s"Event triggert: ${nthEvent} after ${count} seconds")
+            println(s"Event triggert: ${nthEvent} after ${count} seconds") // Debug
             count = 0
           }
         }
       }
     })
-    thread.start()
+    eventLoop.start()
+  }
+
+  // TODO: EVENTuell zu einem Event machen, um SPAM zu verhindern
+  private def dataLoop(): Unit = {
+    val dataLoop = new Thread(new Runnable {
+      override def run(): Unit = {
+        while (running) {
+          Thread.sleep(3000)
+          playerList.foreach(_.pushData())
+        }
+      }
+    })
+    dataLoop.start()
   }
 }
