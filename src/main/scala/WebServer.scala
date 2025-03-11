@@ -4,7 +4,7 @@ import java.net.InetSocketAddress
 import com.sun.net.httpserver.*
 
 class WebServer(connectionEngine: ConnectionEngine):
-  private val server = HttpServer.create(new InetSocketAddress(Config.WEBPORT), 0)
+  private val server = HttpServer.create(new InetSocketAddress(Config.Connection.WEBPORT), 0)
   def start(): Unit =
     server.createContext("/", exchange =>
       val response = """

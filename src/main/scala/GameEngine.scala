@@ -8,10 +8,6 @@ class GameEngine {
 
   var running: Boolean = true
   private var nthEvent: Int = 0
-  private val maximumInterval: Int = 180
-  private val slope: Float = 0.7
-  private val horizontalDisplacement: Int = 5
-  private val minimumInterval: Int = 30
 
   def debug: String = {
     s"""
@@ -89,7 +85,7 @@ class GameEngine {
   }
 
   def getEventInterval(nthEvent: Int): Int = {
-    ((maximumInterval-minimumInterval)/(1+ Math.pow(Math.E,(slope*(nthEvent-horizontalDisplacement))))+minimumInterval).toInt
+    ((Config.Game.MAXIMUMINTERVAL-Config.Game.MINIMUMINTERVALL)/(1+ Math.pow(Math.E,(Config.Game.SLOPE*(nthEvent-Config.Game.HORIZONTALDISPLACEMENT))))+Config.Game.MINIMUMINTERVALL).toInt
   }
 
   def handleCommands(parts: Array[String], client: Client): String = {
