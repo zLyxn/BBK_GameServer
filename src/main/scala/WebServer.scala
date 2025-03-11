@@ -1,13 +1,14 @@
 package org.bbk.gameserver
 
 import java.net.InetSocketAddress
+import java.net.InetAddress
 import com.sun.net.httpserver.*
 
 class WebServer(connectionEngine: ConnectionEngine):
   private val server = HttpServer.create(new InetSocketAddress(Config.Connection.WEBPORT), 0)
   def start(): Unit =
     server.createContext("/", exchange =>
-      val response = """
+      val response = s"""
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -47,6 +48,7 @@ class WebServer(connectionEngine: ConnectionEngine):
           <h1>Welcome to the Dashboard!</h1>
           <p>Game Server: <span id="gameServerStatus" class="status">Checking...</span></p>
           <p>Web Server: <span id="webServerStatus" class="status">Checking...</span></p>
+          <p>IP-Adresse: ${InetAddress.getLocalHost.getHostAddress}:${Config.Connection.GAMEPORT}</p>
           <a href="/start">Start the GameServer</a><br>
           <a href="/stop">Stop the GameServer</a><br>
           <a href="/exit">Stop the WebServer</a>
@@ -92,3 +94,4 @@ class WebServer(connectionEngine: ConnectionEngine):
       val os = exchange.getResponseBody
       os.write(response.getBytes)
       os.close()
+
