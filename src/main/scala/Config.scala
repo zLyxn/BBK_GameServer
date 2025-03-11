@@ -16,5 +16,6 @@ object Config {
     val RESISTANCE: Float = 0.5
     val DAMAGE: Int = 10
     val ENERGY_GAIN: Int = 5
+    val AMMO_GAIN: Int = 3
   }
 }

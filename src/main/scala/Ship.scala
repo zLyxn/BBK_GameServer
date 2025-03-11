@@ -21,4 +21,6 @@ object Ship {
   var Shield: Boolean = false
   var meteorAmount: Int = 0
   var repairColor: Color = Color.None
+  var friendlyColor: Color = Color.Blue
+  var ammo: Int = 0
 }
