@@ -48,7 +48,7 @@ class WebServer(connectionEngine: ConnectionEngine):
           <h1>Welcome to the Dashboard!</h1>
           <p>Game Server: <span id="gameServerStatus" class="status">Checking...</span></p>
           <p>Web Server: <span id="webServerStatus" class="status">Checking...</span></p>
-          <p>IP-Adresse: ${InetAddress.getLocalHost.getHostAddress}:${Config.Connection.GAMEPORT}</p>
+          <p>IP Address: ${InetAddress.getLocalHost.getHostAddress}:${Config.Connection.GAMEPORT}</p>
           <a href="/start">Start the GameServer</a><br>
           <a href="/stop">Stop the GameServer</a><br>
           <a href="/exit">Stop the WebServer</a>
