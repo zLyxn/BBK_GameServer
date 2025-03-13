@@ -1,6 +1,8 @@
 package org.bbk.gameserver
 
 import java.net.{ServerSocket, SocketException}
+import javax.jmdns.JmDNS
+import javax.jmdns.ServiceInfo
 import scala.collection.mutable.ListBuffer
 import scala.io.BufferedSource
 
@@ -10,11 +12,31 @@ class ConnectionEngine(port: Int) {
   @volatile private var running = false
 
   private val gameengine = new GameEngine
+  private var jmdns: JmDNS = null
+  private var serviceInfo: ServiceInfo = null
 
   def start(): Unit = {
     println(s"Server is running on port $port...")
     running = true
     if(serverSocket.isClosed) serverSocket = new ServerSocket(port)
+
+    try {
+      // Register mDNS service
+      jmdns = JmDNS.create()
+      serviceInfo = ServiceInfo.create("_gameserver._tcp.local.", "GameServer", port, "Game Server")
+      jmdns.registerService(serviceInfo)
+
+      println("mDNS service registered successfully.")
+
+      Thread.sleep(300)
+      val registeredServiceInfo = jmdns.getServiceInfo("_gameserver._tcp.local.", "GameServer")
+      println(s"Registered Service Info: $registeredServiceInfo, ${jmdns.list("_gameserver._tcp.local.")}")
+    } catch {
+      case e: Exception =>
+        e.printStackTrace()
+        println("Failed to register mDNS service.")
+    }
+
     while (running) {
       try {
         val socket = serverSocket.accept()
@@ -37,6 +59,13 @@ class ConnectionEngine(port: Int) {
     this.closeAllConections()
     
     serverSocket.close()
+
+    // Unregister mDNS service
+    if (jmdns != null) {
+      jmdns.unregisterService(serviceInfo)
+      jmdns.close()
+    }
+
     println("Server stopped.")
   }
   
