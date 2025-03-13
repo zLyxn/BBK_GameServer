@@ -3,7 +3,7 @@ package org.bbk.gameserver
 import java.io.IOException
 import java.net.Socket
 
-class Client(val socket: Socket) {
+class Client(val socket: Socket, gameEngine: GameEngine) {
   val ip: String = socket.getInetAddress.getHostAddress
   var status: String = "Connecting"
 

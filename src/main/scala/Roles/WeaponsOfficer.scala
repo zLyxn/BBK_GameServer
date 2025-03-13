@@ -2,7 +2,10 @@ package org.bbk.gameserver
 
 import java.net.Socket
 
-class WeaponsOfficer(socket: Socket) extends Client(socket) {
+class WeaponsOfficer(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameEngine) {
+  
+  private var friendlyFireCount: Int = 0
+  
   override def handleRoleCommands(parts: Array[String]): String = {
     parts.head match {
       case "#hit" if parts.length == 2 => hit(parts(1)); ""//TODO: Sting to target wie in color
@@ -24,10 +27,12 @@ class WeaponsOfficer(socket: Socket) extends Client(socket) {
   }
   private def hitShip(color: Color): Unit = {
     if (color == Ship.friendlyColor) {
-      //strafe
-      // gameover / 3 Fehler erlaubt
+      if(friendlyFireCount <= 3){
+        friendlyFireCount += 1
+      }else{
+        gameEngine.gameover("Friendly Fire")
+      }
     }else{
-      // +3 Munition
       Ship.ammo = Ship.ammo + Config.Ship.AMMO_GAIN
     }
     Ship.Shield = true

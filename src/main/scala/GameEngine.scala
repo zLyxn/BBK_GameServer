@@ -33,6 +33,10 @@ class GameEngine {
   }
   def gamedone(): Unit = ()
   def gameover(): Unit = ()
+  def gameover(reason: String): Unit = {
+    print("Game Over: " + reason)
+    // TODO: real gameover
+  }
   def gamewon(): Unit = ()
   
   private var playerList: ListBuffer[Player] = ListBuffer[Player]()
@@ -47,10 +51,10 @@ class GameEngine {
     }
 
     val player: Option[Player] = role match {
-      case "Captain" => Some(new Captain(client.socket))
-      case "Engineer" => Some(new Engineer(client.socket))
-      case "Pilot" => Some(new Pilot(client.socket))
-      case "WeaponsOfficer" => Some(new WeaponsOfficer(client.socket))
+      case "Captain" => Some(new Captain(client.socket, this))
+      case "Engineer" => Some(new Engineer(client.socket, this))
+      case "Pilot" => Some(new Pilot(client.socket, this))
+      case "WeaponsOfficer" => Some(new WeaponsOfficer(client.socket, this))
       case _ =>
         println(s"Unknown role: $role")
         return s"error:Unknown role $role"

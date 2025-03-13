@@ -18,7 +18,7 @@ class ConnectionEngine(port: Int) {
     while (running) {
       try {
         val socket = serverSocket.accept()
-        val client = new Client(socket)
+        val client = new Client(socket, gameengine)
         pendingClients += client
         new Thread(() => handleClient(client)).start()
       } catch {
