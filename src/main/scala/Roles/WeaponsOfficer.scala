@@ -8,7 +8,8 @@ class WeaponsOfficer(socket: Socket, gameEngine: GameEngine) extends Client(sock
   
   override def handleRoleCommands(parts: Array[String]): String = {
     parts.head match {
-      case "#hit" if parts.length == 2 => hit(parts(1)); ""//TODO: Sting to target wie in color
+      case "#hit" if parts.length == 2 => hit(Target.toTarget(parts(1), Color.None)); ""
+      case "#hit" if parts.length == 3 => hit(Target.toTarget(parts(1), Color.toColor(parts(2)))); ""
       case _ => super.handleRoleCommands(parts)
     }
   }
@@ -22,7 +23,7 @@ class WeaponsOfficer(socket: Socket, gameEngine: GameEngine) extends Client(sock
       case Target.Meteor => Ship.meteorAmount -= 1
       case Target.Ship(color) => Ship.Shield = true
       case Target.Lootbox => Ship.Energy += Config.Ship.ENERGY_GAIN
-      case Target.None
+      case Target.None => ()
     }
   }
   private def hitShip(color: Color): Unit = {
