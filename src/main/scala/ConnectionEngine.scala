@@ -4,6 +4,7 @@ import java.net.{ServerSocket, SocketException}
 import javax.jmdns.JmDNS
 import javax.jmdns.ServiceInfo
 import scala.collection.mutable.ListBuffer
+import scala.compiletime.uninitialized
 import scala.io.BufferedSource
 
 class ConnectionEngine(port: Int) {
@@ -12,8 +13,8 @@ class ConnectionEngine(port: Int) {
   @volatile private var running = false
 
   private val gameengine = new GameEngine
-  private var jmdns: JmDNS = null
-  private var serviceInfo: ServiceInfo = null
+  private var jmdns: JmDNS = uninitialized
+  private var serviceInfo: ServiceInfo = uninitialized
 
   def start(): Unit = {
     println(s"Server is running on port $port...")
@@ -23,14 +24,14 @@ class ConnectionEngine(port: Int) {
     try {
       // Register mDNS service
       jmdns = JmDNS.create()
-      serviceInfo = ServiceInfo.create("_gameserver._tcp.local.", "GameServer", port, "Game Server")
+      serviceInfo = ServiceInfo.create("gameserver.tcp.local.", "gameserver.local", port, "Game Server")
       jmdns.registerService(serviceInfo)
 
       println("mDNS service registered successfully.")
 
       Thread.sleep(300)
-      val registeredServiceInfo = jmdns.getServiceInfo("_gameserver._tcp.local.", "GameServer")
-      println(s"Registered Service Info: $registeredServiceInfo, ${jmdns.list("_gameserver._tcp.local.")}")
+      val registeredServiceInfo = jmdns.getServiceInfo("gameserver.tcp.local.", "gameserver.local")
+      println(s"Registered Service Info: $registeredServiceInfo, ${jmdns.list("gameserver.tcp.local.").mkString("Array(", ", ", ")")}")
     } catch {
       case e: Exception =>
         e.printStackTrace()
