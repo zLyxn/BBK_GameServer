@@ -4,6 +4,8 @@ import java.net.InetSocketAddress
 import java.net.InetAddress
 import com.sun.net.httpserver.*
 
+import scala.util.boundary
+
 class WebServer(connectionEngine: ConnectionEngine):
   private val server = HttpServer.create(new InetSocketAddress(Config.Connection.WEBPORT), 0)
   def start(): Unit =
@@ -20,6 +22,7 @@ class WebServer(connectionEngine: ConnectionEngine):
             .status { font-weight: bold; }
             .online { color: green; }
             .offline { color: red; }
+            #commandField { display: none; }
           </style>
           <script>
             function updateGameServerStatus() {
@@ -30,9 +33,11 @@ class WebServer(connectionEngine: ConnectionEngine):
                   if (status.includes("true")) {
                     gameServerStatus.textContent = "Online";
                     gameServerStatus.className = "status online";
+                    commandField.style.display = "block";
                   } else {
                     gameServerStatus.textContent = "Offline";
                     gameServerStatus.className = "status offline";
+                    commandField.style.display = "none";
                   }
                 })
                 .catch(error => {
@@ -52,6 +57,17 @@ class WebServer(connectionEngine: ConnectionEngine):
           <a href="/start">Start the GameServer</a><br>
           <a href="/stop">Stop the GameServer</a><br>
           <a href="/exit">Stop the WebServer</a>
+          <div id="commandField">
+            <input type="text" id="commandInput" placeholder="Enter value">
+            <a id="submit" href="#" onclick="updateLink()">Go to Link</a>
+          </div>
+          <script>
+            function updateLink() {
+              const inputValue = document.getElementById('commandInput').value;
+              const baseUrl = '/sendCommand';
+              document.getElementById('submit').href = baseUrl + '?' + inputValue;
+            }
+          </script>
         </body>
         </html>
         """
@@ -79,17 +95,16 @@ class WebServer(connectionEngine: ConnectionEngine):
       sendResponse(exchange, 200, response)
     )
     server.createContext("/sendCommand", exchange =>
-      val localClient = connectionEngine.getGameEngine.findRole(classOf[Captain]).head
-      val query = exchange.getRequestURI.getQuery
-      val cmd = query
-      val response = s"<html><body>Command received: $cmd</body></html>"
-      connectionEngine.processCommand(cmd, localClient)
+      val query: String = exchange.getRequestURI.toString
+      val command: String = query.split("\\?").last.prepended('#')
+      val localClient = new Client(null, connectionEngine.getGameEngine)
+      val response = s"<html><body>Command ($command) received: ${connectionEngine.processCommand(command, localClient)}</body><a href=\"/\">Return to dashboard</a></html>"
       sendResponse(exchange, 200, response)
     )
 
     server.setExecutor(null)
     server.start()
-    println("WebServer is running on http://localhost:80/")
+    println(s"WebServer is running on http://${InetAddress.getLocalHost.getHostAddress}:${Config.Connection.WEBPORT}/")
 
   // TODO consider stopping the server when the WebServer is stopping
   def stop(): Unit = server.stop(0)
