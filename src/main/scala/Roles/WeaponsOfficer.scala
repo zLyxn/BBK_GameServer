@@ -8,30 +8,39 @@ class WeaponsOfficer(socket: Socket, gameEngine: GameEngine) extends Client(sock
   
   override def handleRoleCommands(parts: Array[String]): String = {
     parts.head match {
-      case "#hit" if parts.length == 2 => hit(Target.toTarget(parts(1), Color.None)); ""
-      case "#hit" if parts.length == 3 => hit(Target.toTarget(parts(1), Color.toColor(parts(2)))); ""
+      case "#shoot" if parts.length == 2 => shoot(Target.toTarget(parts(1), Color.None)); ""
+      case "#shoot" if parts.length == 3 => shoot(Target.toTarget(parts(1), Color.toColor(parts(2)))); ""
       case _ => super.handleRoleCommands(parts)
     }
   }
 
   override def pushData(): Unit = {
-// pushMunitionAmount()
+    pushAmmo()
   }
 
-  private def hit(target: Target): Unit = {
-    target match {
-      case Target.Meteor => Ship.meteorAmount -= 1
-      case Target.Ship(color) => Ship.Shield = true
-      case Target.Lootbox => Ship.Energy += Config.Ship.ENERGY_GAIN
-      case Target.None => ()
+  private def shoot(target: Target): Unit = {
+    if(Ship.ammo > 0){
+      Ship.ammo = Ship.ammo - 1
+      target match {
+        case Target.Meteor => Ship.meteorAmount -= 1
+        case Target.Ship(color) => hitShip(color)
+        case Target.Lootbox => Ship.Energy += Config.Ship.ENERGY_GAIN
+        case Target.None => ()
+      }
     }
+    pushAmmo()
   }
+
+  private def pushAmmo(): Unit = {
+    pushMessage(s"#ammo:${Ship.ammo}")
+  }
+
   private def hitShip(color: Color): Unit = {
     if (color == Ship.friendlyColor) {
       if(friendlyFireCount <= 3){
         friendlyFireCount += 1
       }else{
-        gameEngine.gameover("Friendly Fire")
+        gameEngine.gameover("3 Friendly Ships killed")
       }
     }else{
       Ship.ammo = Ship.ammo + Config.Ship.AMMO_GAIN
