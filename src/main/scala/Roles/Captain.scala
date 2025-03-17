@@ -3,11 +3,15 @@ package org.bbk.gameserver
 import java.net.Socket
 
 class Captain(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameEngine) {
-  def pushHealth(current: Int, max: Int): Unit = {
-    pushMessage(s"health:${current}:${max}")
+
+  override def pushData(): Unit = {
+    pushHealth()
+  }
+
+  private def pushHealth(): Unit = {
+    pushMessage(s"health:${Ship.Health.value}:${Ship.Health.max}")
   }
   def pushEvent(eventType: EventType): Unit = {
-
-    pushMessage("Moin")
+    pushMessage(s"#event:${eventType}")
   }
 }

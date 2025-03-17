@@ -114,6 +114,15 @@ class GameEngine {
     dataLoop()
   }
 
+  def startEvent(): Unit = {
+    ShieldDownEvent().trigger()
+    findRole(classOf[Captain]).foreach(_.pushEvent(EventType.ShieldDownEvent))
+    pushEvent(EventType.ShieldDownEvent)
+  }
+
+  def findRole(role: Class[T]): ListBuffer[T] = {
+    playerList.filter(_.getClass == role)
+  }
   private def eventLoop(): Unit = {
     val eventLoop = new Thread(new Runnable {
       var count: Int = 0
@@ -127,6 +136,7 @@ class GameEngine {
             nthEvent += 1
             println(s"Event triggert: ${nthEvent} after ${count} seconds") // Debug
             count = 0
+            startEvent()
           }
         }
       }
