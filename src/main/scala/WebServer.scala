@@ -78,6 +78,14 @@ class WebServer(connectionEngine: ConnectionEngine):
       val response = s"<html><body>${connectionEngine.isRunning}</body></html>" //<a href="/">Return to dashboard</a>
       sendResponse(exchange, 200, response)
     )
+    server.createContext("/sendCommand", exchange =>
+      val localClient = connectionEngine.getGameEngine.findRole(classOf[Captain]).head
+      val query = exchange.getRequestURI.getQuery
+      val cmd = query
+      val response = s"<html><body>Command received: $cmd</body></html>"
+      connectionEngine.processCommand(cmd, localClient)
+      sendResponse(exchange, 200, response)
+    )
 
     server.setExecutor(null)
     server.start()

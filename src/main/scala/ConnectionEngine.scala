@@ -10,6 +10,7 @@ class ConnectionEngine(port: Int) {
   @volatile private var running = false
 
   private val gameengine = new GameEngine
+  def getGameEngine: GameEngine = gameengine
 
   def start(): Unit = {
     println(s"Server is running on port $port...")
@@ -98,7 +99,7 @@ class ConnectionEngine(port: Int) {
     println(s"Client disconnected: ${client.ip}")
   }
 
-  private def processCommand(command: String, client: Client): String = {
+  def processCommand(command: String, client: Client): String = {
     val parts = command.stripSuffix("\r\n").split(":") // Remove \r\n and split
     parts.head match {
       case "#ping" => "PONG"
