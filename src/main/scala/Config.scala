@@ -7,10 +7,15 @@ object Config {
     val GAMEPORT = 9999
   }
   object Game {
+    val FRIENDLYKILLALLOWED: Int = 3
+    val DATAUPDATEINTERVAL: Int = 6000
     val MAXIMUMINTERVAL: Int = 180
     val SLOPE: Float = 0.7
     val HORIZONTALDISPLACEMENT: Int = 5
     val MINIMUMINTERVALL: Int = 30
+    object Deathmessages {
+      val FRIENDLYFIRE: String = "3 Friendly Ships killed"
+    }
   }
   object Ship {
     val RESISTANCE: Float = 0.5

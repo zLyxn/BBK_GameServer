@@ -117,11 +117,10 @@ class GameEngine {
   def startEvent(): Unit = {
     ShieldDownEvent().trigger()
     findRole(classOf[Captain]).foreach(_.pushEvent(EventType.ShieldDownEvent))
-    pushEvent(EventType.ShieldDownEvent)
   }
 
-  def findRole(role: Class[T]): ListBuffer[T] = {
-    playerList.filter(_.getClass == role)
+  def findRole[T](role: Class[T]): ListBuffer[T] = {
+    playerList.filter(_.getClass == role).asInstanceOf[ListBuffer[T]]
   }
   private def eventLoop(): Unit = {
     val eventLoop = new Thread(new Runnable {
@@ -149,7 +148,7 @@ class GameEngine {
     val dataLoop = new Thread(new Runnable {
       override def run(): Unit = {
         while (running) {
-          Thread.sleep(3000)
+          Thread.sleep(Config.Game.DATAUPDATEINTERVAL)
           playerList.foreach(_.pushData())
         }
       }

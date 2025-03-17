@@ -37,10 +37,10 @@ class WeaponsOfficer(socket: Socket, gameEngine: GameEngine) extends Client(sock
 
   private def hitShip(color: Color): Unit = {
     if (color == Ship.friendlyColor) {
-      if(friendlyFireCount <= 3){
+      if(friendlyFireCount <= Config.Game.FRIENDLYKILLALLOWED){
         friendlyFireCount += 1
       }else{
-        gameEngine.gameover("3 Friendly Ships killed")
+        gameEngine.gameover(Config.Game.Deathmessages.FRIENDLYFIRE)
       }
     }else{
       Ship.ammo = Ship.ammo + Config.Ship.AMMO_GAIN
