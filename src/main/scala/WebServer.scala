@@ -58,8 +58,8 @@ class WebServer(connectionEngine: ConnectionEngine):
           <a href="/stop">Stop the GameServer</a><br>
           <a href="/exit">Stop the WebServer</a>
           <div id="commandField">
-            <input type="text" id="commandInput" placeholder="Enter value">
-            <a id="submit" href="#" onclick="updateLink()">Go to Link</a>
+            <input type="text" id="commandInput" placeholder="Enter value"><br>
+            <a id="submit" href="#" onclick="updateLink()">Send command</a>
           </div>
           <script>
             function updateLink() {
@@ -98,8 +98,9 @@ class WebServer(connectionEngine: ConnectionEngine):
       val query: String = exchange.getRequestURI.toString
       val command: String = query.split("\\?").last.prepended('#')
       val localClient = new Client(null, connectionEngine.getGameEngine)
-      val response = s"<html><body>Command ($command) received: ${connectionEngine.processCommand(command, localClient)}</body><a href=\"/\">Return to dashboard</a></html>"
+      val response = s"<html><body><h1>Command ($command) received:</h1> ${connectionEngine.processCommand(command, localClient).replace("\r\n", "<br>")}</body><a href=\"/\">Return to dashboard</a></html>"
       sendResponse(exchange, 200, response)
+      localClient.disconnect()
     )
 
     server.setExecutor(null)
