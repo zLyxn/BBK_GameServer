@@ -10,19 +10,19 @@ class GameEngine {
   private var nthEvent: Int = 0
 
   def debug: String = {
-    s"""
-      Health: ${Ship.Health}
-      Energy: ${Ship.Energy}
-      ShipSpeed: ${Ship.ShipSpeed}
-      Shield: ${Ship.Shield}
-      meteorAmount: ${Ship.meteorAmount}
-      repairColor: ${Ship.repairColor}
-      nthEvent: ${nthEvent}
-      EventInterval: ${getEventInterval(nthEvent)}
-    """
-    /*RESISTANCE: ${Config.Ship.RESISTANCE}
-    DAMAGE: ${Config.Ship.DAMAGE}
-    ENERGY_GAIN: ${Config.Ship.ENERGY_GAIN}*/
+      s"""
+        Health: ${Ship.Health}
+        Energy: ${Ship.Energy}
+        ShipSpeed: ${Ship.ShipSpeed}
+        Shield: ${Ship.Shield}
+        meteorAmount: ${Ship.meteorAmount}
+        repairColor: ${Ship.repairColor}
+        nthEvent: ${nthEvent}
+        EventInterval: ${getEventInterval(nthEvent)}
+      """
+      /*RESISTANCE: ${Config.Ship.RESISTANCE}
+      DAMAGE: ${Config.Ship.DAMAGE}
+      ENERGY_GAIN: ${Config.Ship.ENERGY_GAIN}*/
   }
 
   // TODO: zu viele Vals ohne Caps
