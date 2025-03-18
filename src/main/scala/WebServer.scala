@@ -109,7 +109,7 @@ class WebServer(connectionEngine: ConnectionEngine):
   // TODO consider stopping the server when the WebServer is stopping
   def stop(): Unit = server.stop(0)
 
-  private def sendResponse(exchange: HttpExchange, statusCode: Int, response: String): Unit =
+  private def sendResponse(exchange: HttpExchange, statusCode: Int, response: String): Unit = {
     if response.isEmpty then
       exchange.sendResponseHeaders(statusCode, -1)
     else
@@ -117,4 +117,5 @@ class WebServer(connectionEngine: ConnectionEngine):
       val os = exchange.getResponseBody
       os.write(response.getBytes)
       os.close()
+  }
 

@@ -12,7 +12,7 @@ class Captain(socket: Socket, gameEngine: GameEngine) extends Client(socket, gam
   }
 
   private def pushHealth(): Unit = {
-    pushMessage(s"health:${Ship.Health.value}:${Ship.Health.max}")
+    pushMessage(s"health:${Ship.health.value}:${Ship.health.max}")
   }
   def pushShield(): Unit = {
     pushMessage(s"shield:${Ship.Shield}")

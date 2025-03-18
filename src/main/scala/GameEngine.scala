@@ -10,16 +10,7 @@ class GameEngine {
   private var nthEvent: Int = 0
 
   def debug: String = {
-      s"""
-        Health: ${Ship.Health}
-        Energy: ${Ship.Energy}
-        ShipSpeed: ${Ship.ShipSpeed}
-        Shield: ${Ship.Shield}
-        meteorAmount: ${Ship.meteorAmount}
-        repairColor: ${Ship.repairColor}
-        nthEvent: ${nthEvent}
-        EventInterval: ${getEventInterval(nthEvent)}
-      """
+      //TODO: Ship.toString 
       s"""
             ${Ship.toString}
             nthEvent: ${nthEvent}

@@ -19,7 +19,7 @@ class Pilot(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameE
     if (Ship.repairColor == meteorColor) {
       Ship.Energy += Config.Ship.ENERGY_GAIN
     } else {
-      Ship.Health -= (Config.Ship.DAMAGE * (1 - (if Ship.Shield then Config.Ship.RESISTANCE else 0))).toInt
+      Ship.health -= (Config.Ship.DAMAGE * (1 - (if Ship.Shield then Config.Ship.RESISTANCE else 0))).toInt
     }
   }
   

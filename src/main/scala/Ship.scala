@@ -1,23 +1,10 @@
 package org.bbk.gameserver
 
 object Ship {
-  class Stat(var value: Int, val max: Int) {
-    def setValue(newValue: Int): Unit = {
-      value = newValue.max(0).min(max)
-    }
-    def +=(amount: Int): Unit = {
-      setValue(value + amount)
-    }
-    def -=(amount: Int): Unit = {
-      setValue(value - amount)
-    }
-    override def toString: String = s"Value: ${value} - Max: ${max}" // + "-" * 5 + super.toString
-  }
-  
-  object Health extends Stat(100, 100)
-  object Energy extends Stat(100, 100)
-  object ShipSpeed extends Stat(100, 100)
-  object CoreAir extends Stat(100, 100) // TODO: send Captain + debug
+  val health = new Stat(100, 100)
+  val Energy = new Stat(100, 100)
+  val ShipSpeed = new Stat(100, 100)
+  val CoreAir = new Stat(100, 100) // TODO: send Captain + debug
 
   var Shield: Boolean = false
   var meteorAmount: Int = 0
@@ -31,7 +18,7 @@ object Ship {
     val fields = this.getClass.getDeclaredFields.filterNot(_.getName.contains("$"))
     fields.map { field =>
       field.setAccessible(true)
-      s"${field.getName}: ${field.get(this).toString}"
-    }.mkString("\r\n")
+      s"${field.getName}: ${field.get(this)}"
+    }.mkString("\r\n").strip()
   }
 }
