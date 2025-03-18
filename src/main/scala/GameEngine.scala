@@ -115,6 +115,7 @@ class GameEngine {
   }
 
   def startEvent(): Unit = {
+    // TODO: Random Event triggern
     ShieldDownEvent().trigger()
     findRole(classOf[Captain]).foreach(_.pushEvent(EventType.ShieldDownEvent))
   }
