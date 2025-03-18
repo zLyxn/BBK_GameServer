@@ -115,9 +115,10 @@ class GameEngine {
   }
 
   def startEvent(): Unit = {
-    // TODO: Random Event triggern
-    ShieldDownEvent().trigger()
-    findRole(classOf[Captain]).foreach(_.pushEvent(EventType.ShieldDownEvent))
+    val activeEventType: EventType = Events.startRandomEvent()
+    if(activeEventType != EventType.None) {
+      findRole(classOf[Captain]).foreach(_.pushEvent(activeEventType))
+    }
   }
 
   def findRole[T](role: Class[T]): ListBuffer[T] = {
@@ -131,7 +132,8 @@ class GameEngine {
         while (running) {
           count += 1
           Thread.sleep(1000)
-          var eventInterval = getEventInterval(nthEvent)
+          Events.solveEvents()
+          val eventInterval = getEventInterval(nthEvent)
           if count >= eventInterval then {
             nthEvent += 1
             println(s"Event triggert: ${nthEvent} after ${count} seconds") // Debug
