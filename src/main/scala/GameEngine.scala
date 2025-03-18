@@ -20,6 +20,11 @@ class GameEngine {
         nthEvent: ${nthEvent}
         EventInterval: ${getEventInterval(nthEvent)}
       """
+      s"""
+            ${Ship.toString}
+            nthEvent: ${nthEvent}
+            EventInterval: ${getEventInterval(nthEvent)}
+      """
       /*RESISTANCE: ${Config.Ship.RESISTANCE}
       DAMAGE: ${Config.Ship.DAMAGE}
       ENERGY_GAIN: ${Config.Ship.ENERGY_GAIN}*/

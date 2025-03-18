@@ -4,7 +4,6 @@ import java.net.InetSocketAddress
 import java.net.InetAddress
 import com.sun.net.httpserver.*
 
-import scala.util.boundary
 
 class WebServer(connectionEngine: ConnectionEngine):
   private val server = HttpServer.create(new InetSocketAddress(Config.Connection.WEBPORT), 0)

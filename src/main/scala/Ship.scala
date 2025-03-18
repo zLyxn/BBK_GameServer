@@ -28,10 +28,10 @@ object Ship {
   var airSupply: Boolean = true // TODO: send Captain + debug
 
   override def toString: String = {
-    val members = this.getClass.getDeclaredFields.map { field =>
+    val fields = this.getClass.getDeclaredFields.filterNot(_.getName.contains("$"))
+    fields.map { field =>
       field.setAccessible(true)
-      s"${field.getName}: ${field.get(this)}"
-    }
-    members.mkString("\n")
+      s"${field.getName}: ${field.get(this).toString}"
+    }.mkString("\r\n")
   }
 }
