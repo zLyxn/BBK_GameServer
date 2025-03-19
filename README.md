@@ -129,3 +129,11 @@ g(x) = (M-o)/(1+e^(k*(x-T)))+o
 - k = 0.7
 - T = 5
 - o = 30
+# Build
+## Vorbereitung
+### Zertifikate
+```sh
+keytool -genkeypair -alias selfsigned -keyalg RSA -keysize 2048 -validity 365 -keystore keystore.jks
+```
+Im Ressource Ordner ausführen
+
