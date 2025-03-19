@@ -1,79 +1,61 @@
 package org.bbk.gameserver
 
-import java.net.InetSocketAddress
-import java.net.InetAddress
 import com.sun.net.httpserver.*
+import com.sun.net.httpserver.HttpsConfigurator
+
+import java.net.{InetAddress, InetSocketAddress}
+import java.security.KeyStore
+import javax.net.ssl.{KeyManagerFactory, SSLContext, TrustManagerFactory}
+import scala.io.Source
 
 
 class WebServer(connectionEngine: ConnectionEngine):
-  private val server = HttpServer.create(new InetSocketAddress(Config.Connection.WEBPORT), 0)
+  private val server = HttpsServer.create(new InetSocketAddress(Config.Connection.WEBPORT), 0)
+
+  // Load the keystore
+  private val keystore = KeyStore.getInstance("JKS")
+  keystore.load(getClass.getResourceAsStream("/keystore.jks"), "password".toCharArray)
+
+  // Set up the key manager factory
+  private val kmf = KeyManagerFactory.getInstance("SunX509")
+  kmf.init(keystore, "password".toCharArray)
+
+  // Set up the trust manager factory
+  private val tmf = TrustManagerFactory.getInstance("SunX509")
+  tmf.init(keystore)
+
+  // Set up the SSL context
+  private val sslContext = SSLContext.getInstance("TLS")
+  sslContext.init(kmf.getKeyManagers, tmf.getTrustManagers, null)
+
+  // Set the SSL context for the server
+  server.setHttpsConfigurator(new HttpsConfigurator(sslContext) {
+    override def configure(params: HttpsParameters): Unit = {
+      val c = sslContext.createSSLEngine.getSSLParameters
+      params.setSSLParameters(c)
+    }
+  })
+
+
+  class ResourceHandler(resourcePath: String):
+    def getResponse: String = {
+      val source = Source.fromInputStream(getClass.getResourceAsStream(resourcePath))
+      try source.mkString
+      finally source.close()
+    }
+
+
+  private val indexPage: String = new ResourceHandler("/public/index.html").getResponse
+    .replace("$$IP$$", InetAddress.getLocalHost.getHostAddress)
+    .replace("$$GAMEPORT$$", Config.Connection.GAMEPORT.toString)
+  private val serviceWorkerScript: String = new ResourceHandler("/public/serviceWorker.js").getResponse
+
+  println(indexPage)
+
   def start(): Unit =
     server.createContext("/", exchange =>
-      val response = s"""
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Dashboard</title>
-          <style>
-            body { font-family: Arial, sans-serif; text-align: center; }
-            .status { font-weight: bold; }
-            .online { color: green; }
-            .offline { color: red; }
-            #commandField { display: none; }
-          </style>
-          <script>
-            function updateGameServerStatus() {
-              fetch('/status')
-                .then(response => response.text())
-                .then(status => {
-                  const gameServerStatus = document.getElementById('gameServerStatus');
-                  if (status.includes("true")) {
-                    gameServerStatus.textContent = "Online";
-                    gameServerStatus.className = "status online";
-                    commandField.style.display = "block";
-                  } else {
-                    gameServerStatus.textContent = "Offline";
-                    gameServerStatus.className = "status offline";
-                    commandField.style.display = "none";
-                  }
-                })
-                .catch(error => {
-                  console.error("Error fetching status:", error);
-                });
-            }
-
-            setInterval(updateGameServerStatus, 5000);
-            window.onload = updateGameServerStatus;
-          </script>
-        </head>
-        <body>
-          <h1>Welcome to the Dashboard!</h1>
-          <p>Game Server: <span id="gameServerStatus" class="status">Checking...</span></p>
-          <p>Web Server: <span id="webServerStatus" class="status">Checking...</span></p>
-          <p>IP Address: ${InetAddress.getLocalHost.getHostAddress}:${Config.Connection.GAMEPORT}</p>
-          <a href="/start">Start the GameServer</a><br>
-          <a href="/stop">Stop the GameServer</a><br>
-          <a href="/exit">Stop the WebServer</a>
-          <div id="commandField">
-            <input type="text" id="commandInput" placeholder="Enter value"><br>
-            <a id="submit" href="#" onclick="updateLink()">Send command</a>
-          </div>
-          <script>
-            function updateLink() {
-              const inputValue = document.getElementById('commandInput').value;
-              const baseUrl = '/sendCommand';
-              document.getElementById('submit').href = baseUrl + '?' + inputValue;
-            }
-          </script>
-          <footer>
-            <a href="/thread">Show all threads</a>
-          </footer>
-        </body>
-        </html>
-        """
-
+      exchange.getResponseHeaders.set("Permissions-Policy", "geolocation=(self), microphone=()")
+      val response = indexPage
       sendResponse(exchange, 200, response)
     )
     server.createContext("/start", exchange =>
@@ -107,14 +89,18 @@ class WebServer(connectionEngine: ConnectionEngine):
       sendResponse(exchange, 200, response)
       localClient.disconnect()
     )
-    server.createContext("/thread", exchange =>
+    server.createContext("/threads", exchange =>
       val response = s"<html><body>${getAllThreads.map(_.getName).mkString("<br>")}</body></html>"
       sendResponse(exchange, 200, response)
     )
-
+    server.createContext("/serviceWorker.js", exchange => {
+      val response = serviceWorkerScript
+      exchange.getResponseHeaders.set("Content-Type", "application/javascript")
+      sendResponse(exchange, 200, response)
+    })
     server.setExecutor(null)
     server.start()
-    println(s"WebServer is running on http://${InetAddress.getLocalHost.getHostAddress}:${Config.Connection.WEBPORT}/")
+    println(s"WebServer is running on https://${InetAddress.getLocalHost.getHostAddress}:${Config.Connection.WEBPORT}/")
 
   // TODO consider stopping the server when the WebServer is stopping
   def stop(): Unit = server.stop(0)

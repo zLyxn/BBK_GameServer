@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Dashboard</title>
+          <style>
+            body { font-family: Arial, sans-serif; text-align: center; }
+            .status { font-weight: bold; }
+            .online { color: green; }
+            .offline { color: red; }
+            #commandField { display: none; }
+            footer { position: fixed; bottom: 0; width: 100%; padding: 10px; }
+          </style>
+          <script>
+            if ('serviceWorker' in navigator) {
+              window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/serviceWorker.js')
+                  .then(registration => {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                  }, error => {
+                    console.log('ServiceWorker registration failed: ', error);
+                  });
+              });
+            }
+
+            function updateGameServerStatus() {
+              fetch('/status')
+                .then(response => response.text())
+                .then(status => {
+                  const gameServerStatus = document.getElementById('gameServerStatus');
+                  if (status.includes("true")) {
+                    gameServerStatus.textContent = "Online";
+                    gameServerStatus.className = "status online";
+                    commandField.style.display = "block";
+                  } else {
+                    gameServerStatus.textContent = "Offline";
+                    gameServerStatus.className = "status offline";
+                    commandField.style.display = "none";
+                  }
+                })
+                .catch(error => {
+                  console.error("Error fetching status:", error);
+                });
+            }
+
+            setInterval(updateGameServerStatus, 5000);
+            window.onload = updateGameServerStatus;
+          </script>
+        </head>
+        <body>
+          <h1>Welcome to the Dashboard!</h1>
+          <p>Game Server: <span id="gameServerStatus" class="status">Checking...</span></p>
+          <p>Web Server: <span id="webServerStatus" class="status">Checking...</span></p>
+          <p>IP Address: $$IP$$:$$GAMEPORT$$</p>
+          <a href="/start">Start the GameServer</a><br>
+          <a href="/stop">Stop the GameServer</a><br>
+          <a href="/exit">Stop the WebServer</a>
+          <div id="commandField">
+            <input type="text" id="commandInput" placeholder="Enter value"><br>
+            <a id="submit" href="#" onclick="updateLink()">Send command</a>
+          </div>
+          <script>
+            function updateLink() {
+              const inputValue = document.getElementById('commandInput').value;
+              const baseUrl = '/sendCommand';
+              document.getElementById('submit').href = baseUrl + '?' + inputValue;
+            }
+          </script>
+          <footer>
+            <a href="/thread">Show all threads</a>
+          </footer>
+        </body>
+        </html>
