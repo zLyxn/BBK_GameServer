@@ -21,7 +21,9 @@ class ConnectionEngine(port: Int) {
         val socket = serverSocket.accept()
         val client = new Client(socket, gameengine)
         pendingClients += client
-        new Thread(() => handleClient(client)).start()
+        val clientThread = new Thread(() => handleClient(client))
+        clientThread.setName("GameServerThread-Client-" + client.hashCode())
+        clientThread.start()
       } catch {
         case e: SocketException =>
           println("ServerSocket closed, stopping server.")

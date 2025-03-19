@@ -138,6 +138,7 @@ class GameEngine {
         }
       }
     })
+    eventLoop.setName("GameServerThread-EventLoop")
     eventLoop.start()
   }
 
@@ -151,6 +152,7 @@ class GameEngine {
         }
       }
     })
+    dataLoop.setName("GameServerThread-DataLoop")
     dataLoop.start()
   }
 }

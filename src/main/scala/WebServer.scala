@@ -67,6 +67,9 @@ class WebServer(connectionEngine: ConnectionEngine):
               document.getElementById('submit').href = baseUrl + '?' + inputValue;
             }
           </script>
+          <footer>
+            <a href="/thread">Show all threads</a>
+          </footer>
         </body>
         </html>
         """
@@ -76,7 +79,10 @@ class WebServer(connectionEngine: ConnectionEngine):
     server.createContext("/start", exchange =>
       val response = "<html><body><h1>You have started the gameserver!</h1><a href=\"/\">Return to dashboard</a></body></html>"
       sendResponse(exchange, 200, response)
-      new Thread(() => connectionEngine.start()).start()
+      //new Thread(() => connectionEngine.start()).start()
+      val gameServerThread = new Thread(() => connectionEngine.start())
+      gameServerThread.setName("GameServerThread-connectionEngine")
+      gameServerThread.start()
     )
     server.createContext("/stop", exchange =>
       val response = "<html><body><h1>You have stopped the gameserver!</h1><a href=\"/\">Return to dashboard</a></body></html>"
@@ -101,6 +107,10 @@ class WebServer(connectionEngine: ConnectionEngine):
       sendResponse(exchange, 200, response)
       localClient.disconnect()
     )
+    server.createContext("/thread", exchange =>
+      val response = s"<html><body>${getAllThreads.map(_.getName).mkString("<br>")}</body></html>"
+      sendResponse(exchange, 200, response)
+    )
 
     server.setExecutor(null)
     server.start()
@@ -108,6 +118,14 @@ class WebServer(connectionEngine: ConnectionEngine):
 
   // TODO consider stopping the server when the WebServer is stopping
   def stop(): Unit = server.stop(0)
+
+  //TODO: Move to a separate class; this is a utility method for
+  private def getAllThreads: Array[Thread] = {
+    val group = Thread.currentThread().getThreadGroup
+    val threads = new Array[Thread](group.activeCount())
+    group.enumerate(threads)
+    threads.filter(_.getName.startsWith("GameServerThread"))
+  }
 
   private def sendResponse(exchange: HttpExchange, statusCode: Int, response: String): Unit = {
     if response.isEmpty then
