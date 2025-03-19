@@ -4,16 +4,15 @@ import scala.collection.mutable.ListBuffer
 import scala.compiletime.ops.any.==
 
 class GameEngine {
-  type Player = Config.Player
+  private type Player = Config.Player
 
   var running: Boolean = true
   private var nthEvent: Int = 0
 
   def debug: String = {
-      //TODO: Ship.toString 
       s"""
             ${Ship.toString}
-            nthEvent: ${nthEvent}
+            nthEvent: $nthEvent
             EventInterval: ${getEventInterval(nthEvent)}
       """
       /*RESISTANCE: ${Config.Ship.RESISTANCE}

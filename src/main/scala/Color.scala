@@ -16,7 +16,7 @@ enum Color {
 }
 
 object Color {
-  def toColor(color: String): Color = {
+  def fromString(color: String): Color = {
     val colors = Color.values
     colors.find(_.toString.equalsIgnoreCase(color)).getOrElse(Color.None)
   }

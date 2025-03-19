@@ -5,7 +5,7 @@ import java.net.Socket
 class Pilot(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameEngine) {
   override def handleRoleCommands(parts: Array[String]): String = {
     parts.head match {
-      case "#hitmeteor" if parts.length == 2 => hitMeteor(Color.toColor(parts(1))); ""
+      case "#hitmeteor" if parts.length == 2 => hitMeteor(Color.fromString(parts(1))); ""
       case _ => super.handleRoleCommands(parts)
     }
   }
