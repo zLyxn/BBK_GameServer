@@ -133,7 +133,7 @@ g(x) = (M-o)/(1+e^(k*(x-T)))+o
 ## Vorbereitung
 ### Zertifikate
 ```sh
-keytool -genkeypair -alias selfsigned -keyalg RSA -keysize 2048 -validity 365 -keystore keystore.jks
+keytool -genkeypair -alias selfsigned -keyalg RSA -keysize 2048 -validity 365 -keystore keystore.jks -dname "CN=localhost, OU=SOW, O=BBK, L=Wip, ST=NRW, C=DE" -storepass password -keypass password
 ```
 Im Ressource Ordner ausführen, Standart-Passwort: `password`
 
