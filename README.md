@@ -135,5 +135,5 @@ g(x) = (M-o)/(1+e^(k*(x-T)))+o
 ```sh
 keytool -genkeypair -alias selfsigned -keyalg RSA -keysize 2048 -validity 365 -keystore keystore.jks
 ```
-Im Ressource Ordner ausführen
+Im Ressource Ordner ausführen, Standart-Passwort: `password`
 
