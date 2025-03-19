@@ -131,6 +131,7 @@ g(x) = (M-o)/(1+e^(k*(x-T)))+o
 - o = 30
 # Build
 ## Vorbereitung
+`chrome://flags#unsafely-treat-insecure-origin-as-secure`
 ### Zertifikate
 ```sh
 keytool -genkeypair -alias selfsigned -keyalg RSA -keysize 2048 -validity 365 -keystore keystore.jks -dname "CN=localhost, OU=SOW, O=BBK, L=Wip, ST=NRW, C=DE" -storepass password -keypass password
