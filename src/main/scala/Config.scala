@@ -13,8 +13,12 @@ object Config {
     val SLOPE: Float = 0.7
     val HORIZONTALDISPLACEMENT: Int = 5
     val MINIMUMINTERVALL: Int = 30
+    val TICKINTERVAL = 100
+    val COREAIRLOSSCHANCE: Int = 25
+    val REPAIRPOINTCHANCE: Int = 1
     object Deathmessages {
       val FRIENDLYFIRE: String = "3 Friendly Ships killed"
+      val SUFFOCATED: String = "Suffocated"
     }
   }
   object Ship {

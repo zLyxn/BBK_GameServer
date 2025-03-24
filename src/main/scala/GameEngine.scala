@@ -2,6 +2,7 @@ package org.bbk.gameserver
 
 import scala.collection.mutable.ListBuffer
 import scala.compiletime.ops.any.==
+import scala.util.Random
 
 class GameEngine {
   private type Player = Config.Player
@@ -107,6 +108,7 @@ class GameEngine {
   def gameLoop(): Unit = {
     eventLoop()
     dataLoop()
+    tickLoop()
   }
 
   def startEvent(): Unit = {
@@ -154,5 +156,45 @@ class GameEngine {
     })
     dataLoop.setName("GameServerThread-DataLoop")
     dataLoop.start()
+  }
+
+  private def tickLoop(): Unit = {
+    val tickLoop = new Thread(new Runnable {
+      override def run(): Unit = {
+        while (running) {
+          Thread.sleep(Config.Game.TICKINTERVAL)
+          checkCoreAir()
+          createRepairPoint()
+        }
+      }
+    })
+    tickLoop.setName("GameServerThread-TickLoop")
+    tickLoop.start()
+  }
+
+  def checkCoreAir(): Unit = {
+    if(!Ship.airSupply){
+      if (Ship.CoreAir.value <= 0) {
+        gameover(Config.Game.Deathmessages.SUFFOCATED)
+      }else{
+        reduceCoreAir()
+      }
+    }
+  }
+
+  private def reduceCoreAir(): Unit = {
+    if (Random.nextInt(100) < Config.Game.COREAIRLOSSCHANCE) {
+      Ship.CoreAir -= 1
+      findRole(classOf[Captain]).foreach(_.pushCoreAir())
+      //TODO: vielleicht zu viel Traffic
+    }
+  }
+  def createRepairPoint(): Unit = {
+    //TODO: Wahrscheinlichkeit von 3%
+    if (Random.nextInt(100) < Config.Game.REPAIRPOINTCHANCE) {
+      Ship.repairPoints += 1
+      findRole(classOf[Captain]).foreach(_.pushRepairPoints())
+    }
+
   }
 }

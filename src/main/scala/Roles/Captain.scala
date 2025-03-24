@@ -10,18 +10,21 @@ class Captain(socket: Socket, gameEngine: GameEngine) extends Client(socket, gam
     pushRepaircolor()
     pushEnergy()
     pushShipSpeed()
+    pushCoreAir()
+    pushAirSupply()
+    pushRepairPoints()
   }
 
-  private def pushHealth(): Unit = {
+  def pushHealth(): Unit = {
     pushMessage(s"health:${Ship.health.value}:${Ship.health.max}")
   }
   def pushShield(): Unit = {
     pushMessage(s"shield:${Ship.Shield}")
   }
-  private def pushRepaircolor(): Unit = {
+  def pushRepaircolor(): Unit = {
     pushMessage(s"repaircolor:${Ship.repairColor}")
   }
-  private def pushEnergy(): Unit = {
+  def pushEnergy(): Unit = {
     pushMessage(s"energy:${Ship.Energy.value}:${Ship.Energy.max}")
   }
   def pushEvent(eventType: EventType): Unit = {
@@ -32,5 +35,11 @@ class Captain(socket: Socket, gameEngine: GameEngine) extends Client(socket, gam
   }
   def pushCoreAir(): Unit = {
     pushMessage(s"#coreAir:${Ship.CoreAir.value}:${Ship.CoreAir.max}")
+  }
+  def pushAirSupply(): Unit = {
+    pushMessage(s"#airSupply:${Ship.airSupply}")
+  }
+  def pushRepairPoints(): Unit = {
+    pushMessage(s"#repairPoints:${Ship.repairPoints}")
   }
 }

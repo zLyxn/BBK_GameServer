@@ -18,6 +18,9 @@ class Engineer(socket: Socket, gameEngine: GameEngine) extends Client(socket, ga
   }
   private def setAirSupplyState(state: Boolean): Unit = {
     Ship.airSupply = state
+    if(!state){
+      gameEngine.findRole(classOf[Captain]).foreach(_.pushAirSupply())
+    }
   }
 
   override def pushData(): Unit = {

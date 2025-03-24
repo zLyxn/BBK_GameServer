@@ -13,6 +13,7 @@ object Ship {
   var ammo: Int = 50
   var weapons: Boolean = true
   var airSupply: Boolean = true // TODO: send Captain + debug
+  var repairPoints: Int = 0
 
   override def toString: String = {
     val fields = this.getClass.getDeclaredFields.filterNot(_.getName.contains("$"))
