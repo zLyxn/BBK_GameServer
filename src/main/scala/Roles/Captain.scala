@@ -9,6 +9,7 @@ class Captain(socket: Socket, gameEngine: GameEngine) extends Client(socket, gam
     pushShield()
     pushRepaircolor()
     pushEnergy()
+    pushShipSpeed()
   }
 
   private def pushHealth(): Unit = {
@@ -25,5 +26,11 @@ class Captain(socket: Socket, gameEngine: GameEngine) extends Client(socket, gam
   }
   def pushEvent(eventType: EventType): Unit = {
     pushMessage(s"#event:${eventType}")
+  }
+  def pushShipSpeed(): Unit = {
+    pushMessage(s"#shipSpeed:${Ship.ShipSpeed.value}:${Ship.ShipSpeed.max}")
+  }
+  def pushCoreAir(): Unit = {
+    pushMessage(s"#coreAir:${Ship.CoreAir.value}:${Ship.CoreAir.max}")
   }
 }

@@ -8,6 +8,7 @@ class Engineer(socket: Socket, gameEngine: GameEngine) extends Client(socket, ga
       case "#shield" if parts.length == 2 => setShieldState(parts(1).toBoolean); ""
       case "#weapons" if parts.length == 2 => setWeaponsState(parts(1).toBoolean); ""
       case "#airSupply" if parts.length == 2 => setAirSupplyState(parts(1).toBoolean); ""
+      case "#shipSpeed" if parts.length == 2 => setShipSpeed(parts(1).toInt); ""
       case _ => super.handleRoleCommands(parts)
     }
   }
@@ -28,5 +29,8 @@ class Engineer(socket: Socket, gameEngine: GameEngine) extends Client(socket, ga
       gameEngine.findRole(classOf[Captain]).foreach(_.pushShield())
     }
     println(s"Ship.Shield: ${Ship.Shield}")
+  }
+  private def setShipSpeed(speed: Int): Unit = {
+    Ship.ShipSpeed.value = speed
   }
 }

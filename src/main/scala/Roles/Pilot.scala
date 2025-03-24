@@ -24,7 +24,7 @@ class Pilot(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameE
   }
   
   def pushShipSpeed(): Unit = {
-    pushMessage(s"#shipSpeed:${Ship.ShipSpeed.value}")
+    pushMessage(s"#shipSpeed:${Ship.ShipSpeed.value}:${Ship.ShipSpeed.max}")
   }
   def pushMeteorAmount(): Unit = {
     pushMessage(s"#meteorAmount:${Ship.meteorAmount}")
