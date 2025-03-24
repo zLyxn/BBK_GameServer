@@ -1,7 +1,7 @@
 package org.bbk.gameserver
 
 import com.sun.net.httpserver.*
-import com.sun.net.httpserver.HttpsConfigurator
+//import com.sun.net.httpserver.HttpsConfigurator
 
 import java.net.{InetAddress, InetSocketAddress}
 import java.security.KeyStore
@@ -10,31 +10,31 @@ import scala.io.Source
 
 
 class WebServer(connectionEngine: ConnectionEngine):
-  private val server = HttpsServer.create(new InetSocketAddress(Config.Connection.WEBPORT), 0)
+  private val server = HttpServer.create(new InetSocketAddress(Config.Connection.WEBPORT), 0)
 
   // Load the keystore
-  private val keystore = KeyStore.getInstance("JKS")
-  keystore.load(getClass.getResourceAsStream("/keystore.jks"), "password".toCharArray)
+  //private val keystore = KeyStore.getInstance("JKS")
+  //keystore.load(getClass.getResourceAsStream("/keystore.jks"), "password".toCharArray)
 
   // Set up the key manager factory
-  private val kmf = KeyManagerFactory.getInstance("SunX509")
-  kmf.init(keystore, "password".toCharArray)
+  //private val kmf = KeyManagerFactory.getInstance("SunX509")
+  //kmf.init(keystore, "password".toCharArray)
 
   // Set up the trust manager factory
-  private val tmf = TrustManagerFactory.getInstance("SunX509")
-  tmf.init(keystore)
+  //private val tmf = TrustManagerFactory.getInstance("SunX509")
+  //tmf.init(keystore)
 
   // Set up the SSL context
-  private val sslContext = SSLContext.getInstance("TLS")
-  sslContext.init(kmf.getKeyManagers, tmf.getTrustManagers, null)
+  //private val sslContext = SSLContext.getInstance("TLS")
+  //sslContext.init(kmf.getKeyManagers, tmf.getTrustManagers, null)
 
   // Set the SSL context for the server
-  server.setHttpsConfigurator(new HttpsConfigurator(sslContext) {
-    override def configure(params: HttpsParameters): Unit = {
-      val c = sslContext.createSSLEngine.getSSLParameters
-      params.setSSLParameters(c)
-    }
-  })
+  //server.setHttpsConfigurator(new HttpsConfigurator(sslContext) {
+  //  override def configure(params: HttpsParameters): Unit = {
+  //    val c = sslContext.createSSLEngine.getSSLParameters
+  //    params.setSSLParameters(c)
+  //  }
+  //})
 
 
   class ResourceHandler(resourcePath: String):
@@ -100,7 +100,7 @@ class WebServer(connectionEngine: ConnectionEngine):
     })
     server.setExecutor(null)
     server.start()
-    println(s"WebServer is running on https://${InetAddress.getLocalHost.getHostAddress}:${Config.Connection.WEBPORT}/")
+    println(s"WebServer is running on http${if (server.isInstanceOf[HttpsServer]) "s" else ""}://${InetAddress.getLocalHost.getHostAddress}:${Config.Connection.WEBPORT}/")
 
   // TODO consider stopping the server when the WebServer is stopping
   def stop(): Unit = server.stop(0)
