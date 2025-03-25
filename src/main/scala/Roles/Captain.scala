@@ -12,34 +12,42 @@ class Captain(socket: Socket, gameEngine: GameEngine) extends Client(socket, gam
     pushShipSpeed()
     pushCoreAir()
     pushAirSupply()
+    pushWeapons()
     pushRepairPoints()
+    pushDrive()
   }
 
   def pushHealth(): Unit = {
-    pushMessage(s"health:${Ship.health.value}:${Ship.health.max}")
+    pushMessage(s"#health:${Ship.health.value}:${Ship.health.max}")
   }
   def pushShield(): Unit = {
-    pushMessage(s"shield:${Ship.Shield}")
+    pushMessage(s"#shield:${Ship.shield}")
+  }
+  def pushWeapons(): Unit = {
+    pushMessage(s"#weapons:${Ship.weapons}")
   }
   def pushRepaircolor(): Unit = {
-    pushMessage(s"repaircolor:${Ship.repairColor}")
+    pushMessage(s"#repaircolor:${Ship.repairColor}")
   }
   def pushEnergy(): Unit = {
-    pushMessage(s"energy:${Ship.Energy.value}:${Ship.Energy.max}")
+    pushMessage(s"#energy:${Ship.energy.value}:${Ship.energy.max}")
   }
   def pushEvent(eventType: EventType): Unit = {
     pushMessage(s"#event:${eventType}")
   }
   def pushShipSpeed(): Unit = {
-    pushMessage(s"#shipSpeed:${Ship.ShipSpeed.value}:${Ship.ShipSpeed.max}")
+    pushMessage(s"#shipSpeed:${Ship.shipSpeed.value}:${Ship.shipSpeed.max}")
   }
   def pushCoreAir(): Unit = {
-    pushMessage(s"#coreAir:${Ship.CoreAir.value}:${Ship.CoreAir.max}")
+    pushMessage(s"#coreAir:${Ship.coreAir.value}:${Ship.coreAir.max}")
   }
   def pushAirSupply(): Unit = {
     pushMessage(s"#airSupply:${Ship.airSupply}")
   }
   def pushRepairPoints(): Unit = {
     pushMessage(s"#repairPoints:${Ship.repairPoints}")
+  }
+  def pushDrive(): Unit = {
+    pushMessage(s"#drive:${Ship.drive}")
   }
 }

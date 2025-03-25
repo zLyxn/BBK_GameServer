@@ -24,7 +24,7 @@ class WeaponsOfficer(socket: Socket, gameEngine: GameEngine) extends Client(sock
       target match {
         case Target.Meteor => Ship.meteorAmount -= 1
         case Target.Ship(color) => hitShip(color)
-        case Target.Lootbox => Ship.Energy += Config.Ship.ENERGY_GAIN
+        case Target.Lootbox => Ship.energy += Config.Ship.ENERGY_GAIN
         case Target.None => ()
       }
     }
@@ -45,6 +45,6 @@ class WeaponsOfficer(socket: Socket, gameEngine: GameEngine) extends Client(sock
     }else{
       Ship.ammo = Ship.ammo + Config.Ship.AMMO_GAIN
     }
-    Ship.Shield = true
+    Ship.shield = true
   }
 }

@@ -174,7 +174,7 @@ class GameEngine {
 
   def checkCoreAir(): Unit = {
     if(!Ship.airSupply){
-      if (Ship.CoreAir.value <= 0) {
+      if (Ship.coreAir.value <= 0) {
         gameover(Config.Game.Deathmessages.SUFFOCATED)
       }else{
         reduceCoreAir()
@@ -184,7 +184,7 @@ class GameEngine {
 
   private def reduceCoreAir(): Unit = {
     if (Random.nextInt(100) < Config.Game.COREAIRLOSSCHANCE) {
-      Ship.CoreAir -= 1
+      Ship.coreAir -= 1
       findRole(classOf[Captain]).foreach(_.pushCoreAir())
       //TODO: vielleicht zu viel Traffic
     }

@@ -28,12 +28,12 @@ class Engineer(socket: Socket, gameEngine: GameEngine) extends Client(socket, ga
   }
   private def setShieldState(state: Boolean): Unit = {
     if(Events.getActiveEvents.exists(_.isInstanceOf[ShieldDownEvent])){
-      Ship.Shield = state
+      Ship.shield = state
       gameEngine.findRole(classOf[Captain]).foreach(_.pushShield())
     }
-    println(s"Ship.Shield: ${Ship.Shield}")
+    println(s"Ship.Shield: ${Ship.shield}")
   }
   private def setShipSpeed(speed: Int): Unit = {
-    Ship.ShipSpeed.value = speed
+    Ship.shipSpeed.value = speed
   }
 }

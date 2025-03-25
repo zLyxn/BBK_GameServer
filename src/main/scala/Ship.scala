@@ -2,17 +2,18 @@ package org.bbk.gameserver
 
 object Ship {
   val health = new Stat(100, 100)
-  val Energy = new Stat(100, 100)
-  val ShipSpeed = new Stat(100, 100)
-  val CoreAir = new Stat(100, 100) // TODO: send Captain + debug
-
-  var Shield: Boolean = false
+  val energy = new Stat(100, 100)
+  val shipSpeed = new Stat(100, 100)
+  val coreAir = new Stat(100, 100) // TODO: send Captain + debug
+  
   var meteorAmount: Int = 0
   var repairColor: Color = Color.None
   var friendlyColor: Color = Color.Blue
   var ammo: Int = 50
+  var shield: Boolean = false
   var weapons: Boolean = true
   var airSupply: Boolean = true // TODO: send Captain + debug
+  var drive: Boolean = true
   var repairPoints: Int = 0
 
   override def toString: String = {

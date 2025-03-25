@@ -16,6 +16,7 @@ object Config {
     val TICKINTERVAL = 100
     val COREAIRLOSSCHANCE: Int = 25
     val REPAIRPOINTCHANCE: Int = 1
+    val SYSTEMDOWNCHANCE: Int = 25
     object Deathmessages {
       val FRIENDLYFIRE: String = "3 Friendly Ships killed"
       val SUFFOCATED: String = "Suffocated"
