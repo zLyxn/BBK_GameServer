@@ -189,12 +189,11 @@ class GameEngine {
       //TODO: vielleicht zu viel Traffic
     }
   }
+  
   def createRepairPoint(): Unit = {
-    //TODO: Wahrscheinlichkeit von 3%
     if (Random.nextInt(100) < Config.Game.REPAIRPOINTCHANCE) {
       Ship.repairPoints += 1
       findRole(classOf[Captain]).foreach(_.pushRepairPoints())
     }
-
   }
 }
