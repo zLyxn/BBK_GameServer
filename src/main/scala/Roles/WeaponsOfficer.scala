@@ -16,6 +16,7 @@ class WeaponsOfficer(socket: Socket, gameEngine: GameEngine) extends Client(sock
 
   override def pushData(): Unit = {
     pushAmmo()
+    pushWeapons()
   }
 
   private def shoot(target: Target): Unit = {
@@ -46,5 +47,9 @@ class WeaponsOfficer(socket: Socket, gameEngine: GameEngine) extends Client(sock
       Ship.ammo = Ship.ammo + Config.Ship.AMMO_GAIN
     }
     Ship.shield = true
+  }
+  
+  def pushWeapons(): Unit = {
+    pushMessage(s"#weapons:${Ship.weapons}")
   }
 }

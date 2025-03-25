@@ -14,6 +14,12 @@ object Ship {
   var weapons: Boolean = true
   var airSupply: Boolean = true // TODO: send Captain + debug
   var drive: Boolean = true
+
+  var shieldWorking: Boolean = false
+  var weaponsWorking: Boolean = true
+  var airSupplyWorking: Boolean = true
+  var driveWorking: Boolean = true
+  
   var repairPoints: Int = 0
 
   override def toString: String = {

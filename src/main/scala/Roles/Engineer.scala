@@ -9,6 +9,7 @@ class Engineer(socket: Socket, gameEngine: GameEngine) extends Client(socket, ga
       case "#weapons" if parts.length == 2 => setWeaponsState(parts(1).toBoolean); ""
       case "#airSupply" if parts.length == 2 => setAirSupplyState(parts(1).toBoolean); ""
       case "#shipSpeed" if parts.length == 2 => setShipSpeed(parts(1).toInt); ""
+      case "#repair" if parts.length == 2 => repair(parts(1).toLowerCase); ""
       case _ => super.handleRoleCommands(parts)
     }
   }
@@ -35,5 +36,16 @@ class Engineer(socket: Socket, gameEngine: GameEngine) extends Client(socket, ga
   }
   private def setShipSpeed(speed: Int): Unit = {
     Ship.shipSpeed.value = speed
+  }
+
+  private def repair(system: String): Unit = {
+    // TODO: enum für systeme + evtl. Schleife
+    system match {
+      //TODO: Nachricht an Captain senden in Funktion auslagern
+      case "shield" => Ship.shield = true; gameEngine.findRole(classOf[Captain]).foreach(_.pushShield())
+      case "weapons" => Ship.weapons = true; gameEngine.findRole(classOf[Captain]).foreach(_.pushWeapons()); gameEngine.findRole(classOf[WeaponsOfficer]).foreach(_.pushWeapons())
+      case "airsupply" => Ship.airSupply = true; gameEngine.findRole(classOf[Captain]).foreach(_.pushAirSupply())
+      case "drive" => Ship.drive = true; gameEngine.findRole(classOf[Captain]).foreach(_.pushDrive())
+    }
   }
 }

@@ -27,7 +27,10 @@ class Pilot(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameE
   }
   
   def pushShipSpeed(): Unit = {
-    pushMessage(s"#shipSpeed:${Ship.shipSpeed.value}:${Ship.shipSpeed.max}")
+    if(Ship.drive && Ship.driveWorking){
+      pushMessage(s"#shipSpeed:${Ship.shipSpeed.value}:${Ship.shipSpeed.max}")
+    }
+    pushMessage(s"#shipSpeed:0:${Ship.shipSpeed.max}")
   }
   private def pushMeteorAmount(): Unit = {
     pushMessage(s"#meteorAmount:${Ship.meteorAmount}")
@@ -37,15 +40,16 @@ class Pilot(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameE
     // TODO: Systeme nicht ausschalten SONDERN extra wert für kaputte Systeme implementieren
     if (Random.nextInt(100) < Config.Game.SYSTEMDOWNCHANCE) {
       randomSystem() match {
-        case "shield" => updateShipSystem(Ship.shield = false, _.pushShield())
-        case "weapons" => updateShipSystem(Ship.weapons = false, _.pushWeapons())
-        case "airSupply" => updateShipSystem(Ship.airSupply = false, _.pushAirSupply())
-        case "drive" => updateShipSystem(Ship.drive = false, _.pushDrive())
+        case "shield" => updateShipSystem(Ship.shield = false, Ship.shieldWorking, _.pushShield())
+        case "weapons" => updateShipSystem(Ship.weapons = false, Ship.weaponsWorking, _.pushWeapons())
+        case "airSupply" => updateShipSystem(Ship.airSupply = false, Ship.shieldWorking, _.pushAirSupply())
+        case "drive" => updateShipSystem(Ship.drive = false, Ship.driveWorking, _.pushDrive())
       }
     }
   }
 
   private def randomSystem(): String = {
+    //TODO: Systeme enum HIER
     Random.nextInt(4) match {
       case 0 => "shield"
       case 1 => "weapons"
@@ -54,8 +58,9 @@ class Pilot(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameE
     }
   }
 
-  private def updateShipSystem(systemUpdate: => Unit, notification: Captain => Unit): Unit = {
+  private def updateShipSystem(systemUpdate: => Unit, systemWorkingUpdate: => Unit, notification: Captain => Unit): Unit = {
     systemUpdate
+    systemWorkingUpdate
     gameEngine.findRole(classOf[Captain]).foreach(notification)
   }
 }
