@@ -39,13 +39,25 @@ class Engineer(socket: Socket, gameEngine: GameEngine) extends Client(socket, ga
   }
 
   private def repair(system: String): Unit = {
-    // TODO: enum für systeme + evtl. Schleife
-    system match {
-      //TODO: Nachricht an Captain senden in Funktion auslagern
-      case "shield" => Ship.shield = true; gameEngine.findRole(classOf[Captain]).foreach(_.pushShield())
-      case "weapons" => Ship.weapons = true; gameEngine.findRole(classOf[Captain]).foreach(_.pushWeapons()); gameEngine.findRole(classOf[WeaponsOfficer]).foreach(_.pushWeapons())
-      case "airsupply" => Ship.airSupply = true; gameEngine.findRole(classOf[Captain]).foreach(_.pushAirSupply())
-      case "drive" => Ship.drive = true; gameEngine.findRole(classOf[Captain]).foreach(_.pushDrive())
+    val systemEnum = Ship.toSystems(system)
+    systemEnum match {
+      case Ship.Systems.Shield =>
+        Ship.shield = true
+        sendCaptainMessage(_.pushShield())
+      case Ship.Systems.Weapons =>
+        Ship.weapons = true
+        sendCaptainMessage(_.pushWeapons())
+        gameEngine.findRole(classOf[WeaponsOfficer]).foreach(_.pushWeapons())
+      case Ship.Systems.AirSupply =>
+        Ship.airSupply = true
+        sendCaptainMessage(_.pushAirSupply())
+      case Ship.Systems.Drive =>
+        Ship.drive = true
+        sendCaptainMessage(_.pushDrive())
     }
+  }
+
+  private def sendCaptainMessage(action: Captain => Unit): Unit = {
+    gameEngine.findRole(classOf[Captain]).foreach(action)
   }
 }

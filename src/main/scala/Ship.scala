@@ -29,4 +29,22 @@ object Ship {
       s"${field.getName}: ${field.get(this)}"
     }.mkString("\r\n").strip()
   }
+
+  enum Systems {
+    case Shield
+    case Weapons
+    case AirSupply
+    case Drive
+  }
+
+  //TODO: viellecih andere Position
+  def toSystems(system: String): Systems = {
+    system.toLowerCase match {
+      case "shield" => Systems.Shield
+      case "weapons" => Systems.Weapons
+      case "airsupply" => Systems.AirSupply
+      case "drive" => Systems.Drive
+      case _ => throw new IllegalArgumentException(s"Unknown system: $system")
+    }
+  }
 }
