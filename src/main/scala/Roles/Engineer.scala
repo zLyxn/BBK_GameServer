@@ -39,6 +39,9 @@ class Engineer(socket: Socket, gameEngine: GameEngine) extends Client(socket, ga
   }
 
   private def repair(system: String): Unit = {
+    Ship.repairPoints = Ship.repairPoints - 1
+    sendCaptainMessage(_.pushRepairPoints())
+
     val systemEnum = Ship.toSystems(system)
     systemEnum match {
       case Ship.Systems.Shield =>
