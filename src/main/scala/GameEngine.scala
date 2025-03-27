@@ -26,12 +26,16 @@ class GameEngine {
 
   def gamestart(): Unit = {
     gameLoop()
+    sendBroadCast("game:start")
   }
   def gamedone(): Unit = ()
-  def gameover(): Unit = ()
   def gameover(reason: String): Unit = {
     print("Game Over: " + reason)
-    // TODO: real gameover
+    sendBroadCast(s"game:over: $reason")
+
+    // TODO: Ein richtiges gameover
+    //  mit beenden des spiels
+    //  und der Option ein neues Spiel zu starten
   }
   def gamewon(): Unit = ()
   
@@ -199,5 +203,8 @@ class GameEngine {
 
   private def sendCaptainMessage(action: Captain => Unit): Unit = {
     findRole(classOf[Captain]).foreach(action)
+  }
+  private def sendBroadCast(text: String): Unit = {
+    playerList.foreach(_.pushMessage(text))
   }
 }
