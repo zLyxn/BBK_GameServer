@@ -114,7 +114,7 @@ class GameEngine {
   def startEvent(): Unit = {
     val activeEventType: EventType = Events.startRandomEvent()
     if(activeEventType != EventType.None) {
-      findRole(classOf[Captain]).foreach(_.pushEvent(activeEventType))
+      sendCaptainMessage(_.pushEvent(activeEventType))
     }
   }
 
@@ -185,7 +185,7 @@ class GameEngine {
   private def reduceCoreAir(): Unit = {
     if (Random.nextInt(100) < Config.Game.COREAIRLOSSCHANCE) {
       Ship.coreAir -= 1
-      findRole(classOf[Captain]).foreach(_.pushCoreAir())
+      sendCaptainMessage(_.pushCoreAir())
       //TODO: vielleicht zu viel Traffic
     }
   }
@@ -193,7 +193,11 @@ class GameEngine {
   def createRepairPoint(): Unit = {
     if (Random.nextInt(100) < Config.Game.REPAIRPOINTCHANCE) {
       Ship.repairPoints += 1
-      findRole(classOf[Captain]).foreach(_.pushRepairPoints())
+      sendCaptainMessage(_.pushRepairPoints())
     }
+  }
+
+  private def sendCaptainMessage(action: Captain => Unit): Unit = {
+    findRole(classOf[Captain]).foreach(action)
   }
 }
