@@ -28,7 +28,11 @@ class GameEngine {
     gameLoop()
     sendBroadCast("game:start")
   }
+
+  //TODO: Wo ist der unterschied
   def gamedone(): Unit = ()
+  def gamewon(): Unit = ()
+
   def gameover(reason: String): Unit = {
     print("Game Over: " + reason)
     sendBroadCast(s"game:over: $reason")
@@ -37,7 +41,6 @@ class GameEngine {
     //  mit beenden des spiels
     //  und der Option ein neues Spiel zu starten
   }
-  def gamewon(): Unit = ()
   
   private var playerList: ListBuffer[Player] = ListBuffer[Player]()
 
@@ -88,7 +91,7 @@ class GameEngine {
     playerList.clone().map(removeRole)
   }
 
-  def getEventInterval(nthEvent: Int): Int = {
+  private def getEventInterval(nthEvent: Int): Int = {
     ((Config.Game.MAXIMUMINTERVAL-Config.Game.MINIMUMINTERVALL)/(1+ Math.pow(Math.E,(Config.Game.SLOPE*(nthEvent-Config.Game.HORIZONTALDISPLACEMENT))))+Config.Game.MINIMUMINTERVALL).toInt
   }
 
@@ -100,7 +103,7 @@ class GameEngine {
     }
   }
 
-  def handlePlayerCommands(parts: Array[String], player: Player): String = {
+  private def handlePlayerCommands(parts: Array[String], player: Player): String = {
     val commandResult = player.handleCommands(parts)
     if (commandResult.isEmpty) {
       s"error:Unknown command:${parts.head}"
@@ -109,13 +112,13 @@ class GameEngine {
     }
   }
 
-  def gameLoop(): Unit = {
+  private def gameLoop(): Unit = {
     eventLoop()
     dataLoop()
     tickLoop()
   }
 
-  def startEvent(): Unit = {
+  private def startEvent(): Unit = {
     val activeEventType: EventType = Events.startRandomEvent()
     if(activeEventType != EventType.None) {
       sendCaptainMessage(_.pushEvent(activeEventType))
@@ -176,7 +179,7 @@ class GameEngine {
     tickLoop.start()
   }
 
-  def checkCoreAir(): Unit = {
+  private def checkCoreAir(): Unit = {
     if(!Ship.airSupply){
       if (Ship.coreAir.value <= 0) {
         gameover(Config.Game.Deathmessages.SUFFOCATED)
@@ -194,7 +197,7 @@ class GameEngine {
     }
   }
   
-  def createRepairPoint(): Unit = {
+  private def createRepairPoint(): Unit = {
     if (Random.nextInt(100) < Config.Game.REPAIRPOINTCHANCE) {
       Ship.repairPoints += 1
       sendCaptainMessage(_.pushRepairPoints())
