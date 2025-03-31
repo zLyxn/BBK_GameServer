@@ -19,9 +19,9 @@ class Pilot(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameE
   private def hitMeteor(meteorColor: Color): Unit = {
     if (Ship.repairColor == meteorColor) {
       Ship.energy += Config.Ship.ENERGY_GAIN
+      Ship.repairPointChance += Config.Game.REPAIRPOINTCHANCEGAIN
     } else {
       Ship.health -= (Config.Ship.DAMAGE * (1 - (if Ship.shield then Config.Ship.RESISTANCE else 0))).toInt
-      // ein zufälliges System kaputt
       randomSystemDown()
     }
   }

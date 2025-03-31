@@ -197,12 +197,12 @@ class GameEngine {
     }
   }
   
-  //TODO: evtl. mit Kollison Pilot
   private def createRepairPoint(): Unit = {
-    if (Random.nextInt(100) < Config.Game.REPAIRPOINTCHANCE) {
+    if (Random.nextInt(100) < Ship.repairPointChance.value) {
       Ship.repairPoints += 1
       sendCaptainMessage(_.pushRepairPoints())
     }
+    Ship.repairPointChance -= Config.Game.REPAIRPOINTCHANCELOSS
   }
 
   private def sendCaptainMessage(action: Captain => Unit): Unit = {

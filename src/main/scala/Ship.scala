@@ -22,6 +22,8 @@ object Ship {
   
   var repairPoints: Int = 0
 
+  val repairPointChance: Stat = new Stat(0, 100)
+
   override def toString: String = {
     val fields = this.getClass.getDeclaredFields.filterNot(_.getName.contains("$"))
     fields.map { field =>
