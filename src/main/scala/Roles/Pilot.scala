@@ -39,16 +39,16 @@ class Pilot(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameE
   private def randomSystemDown(): Unit = {
     if (Random.nextInt(100) < Config.Game.SYSTEMDOWNCHANCE) {
       randomSystem() match {
-        case Ship.Systems.Shield => updateShipSystem(Ship.shield = false, Ship.shieldWorking = false, _.pushShield())
-        case Ship.Systems.Weapons => updateShipSystem(Ship.weapons = false, Ship.weaponsWorking = false, _.pushWeapons())
-        case Ship.Systems.AirSupply => updateShipSystem(Ship.airSupply = false, Ship.shieldWorking = false, _.pushAirSupply())
-        case Ship.Systems.Drive => updateShipSystem(Ship.drive = false, Ship.driveWorking = false, _.pushDrive())
+        case System.Shield => updateShipSystem(Ship.shield = false, Ship.shieldWorking = false, _.pushShield())
+        case System.Weapons => updateShipSystem(Ship.weapons = false, Ship.weaponsWorking = false, _.pushWeapons())
+        case System.AirSupply => updateShipSystem(Ship.airSupply = false, Ship.shieldWorking = false, _.pushAirSupply())
+        case System.Drive => updateShipSystem(Ship.drive = false, Ship.driveWorking = false, _.pushDrive())
       }
     }
   }
 
-  private def randomSystem(): Ship.Systems = {
-    Ship.Systems.values(Random.nextInt(Ship.Systems.values.length))
+  private def randomSystem(): System = {
+    System.values(Random.nextInt(System.values.length))
   }
 
   private def updateShipSystem(systemUpdate: => Unit, systemWorkingUpdate: => Unit, notification: Captain => Unit): Unit = {

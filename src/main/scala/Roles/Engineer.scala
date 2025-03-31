@@ -8,7 +8,7 @@ class Engineer(socket: Socket, gameEngine: GameEngine) extends Client(socket, ga
       case "#shield" if parts.length == 2 => setShieldState(parts(1).toBoolean); ""
       case "#weapons" if parts.length == 2 => setWeaponsState(parts(1).toBoolean); ""
       case "#airSupply" if parts.length == 2 => setAirSupplyState(parts(1).toBoolean); ""
-      case "#shipSpeed" if parts.length == 2 => setShipSpeed(parts(1).toInt); ""
+      case "#shipSpeed" if parts.length == 2 => setShipSpeed(parts(1).toInt); ""//TODO: drive
       case "#repair" if parts.length == 2 => repair(parts(1).toLowerCase); ""
       case _ => super.handleRoleCommands(parts)
     }
@@ -42,20 +42,20 @@ class Engineer(socket: Socket, gameEngine: GameEngine) extends Client(socket, ga
     Ship.repairPoints = Ship.repairPoints - 1
     sendCaptainMessage(_.pushRepairPoints())
 
-    val systemEnum = Ship.toSystems(system)
+    val systemEnum = System.fromString(system)
     systemEnum match {
-      case Ship.Systems.Shield =>
-        Ship.shield = true
+      case System.Shield =>
+        Ship.shieldWorking = true
         sendCaptainMessage(_.pushShield())
-      case Ship.Systems.Weapons =>
-        Ship.weapons = true
+      case System.Weapons =>
+        Ship.weaponsWorking = true
         sendCaptainMessage(_.pushWeapons())
         gameEngine.findRole(classOf[WeaponsOfficer]).foreach(_.pushWeapons())
-      case Ship.Systems.AirSupply =>
-        Ship.airSupply = true
+      case System.AirSupply =>
+        Ship.airSupplyWorking = true
         sendCaptainMessage(_.pushAirSupply())
-      case Ship.Systems.Drive =>
-        Ship.drive = true
+      case System.Drive =>
+        Ship.driveWorking = true
         sendCaptainMessage(_.pushDrive())
     }
   }
