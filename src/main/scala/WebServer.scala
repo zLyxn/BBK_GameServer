@@ -50,8 +50,6 @@ class WebServer(connectionEngine: ConnectionEngine):
     .replace("$$GAMEPORT$$", Config.Connection.GAMEPORT.toString)
   private val serviceWorkerScript: String = new ResourceHandler("/public/serviceWorker.js").getResponse
 
-  println(indexPage)
-
   def start(): Unit =
     server.createContext("/", exchange =>
       exchange.getResponseHeaders.set("Permissions-Policy", "geolocation=(self), microphone=()")

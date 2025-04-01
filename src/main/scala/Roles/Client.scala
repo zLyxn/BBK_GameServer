@@ -30,7 +30,7 @@ class Client(var socket: Socket, gameEngine: GameEngine) {
   def pushData(): Unit = ()
   def pushStart(): Unit =  pushMessage("#game:start")
   def pushLoss(): Unit =  pushMessage("#game:over")
-  def pushWin(): Unit =  pushMessage("#game:won") // TODO: Wann haben wir gewonnen?
+  def pushWin(): Unit =  pushMessage("#game:won")
 
   def handleCommands(parts: Array[String]): Option[String] = {
     Some(parts.head match {

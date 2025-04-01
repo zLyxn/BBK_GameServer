@@ -42,52 +42,20 @@ class Pilot(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameE
       println("one System down")
       val system = randomSystem()
 
-      println(s"System: ${system}")
+      val decapitalizedSystem = gameEngine.decapitalize(system.toString)
 
-      //TODO: vals in Config
-      // java.lang.NoSuchFieldException: Shield
-      //        at java.base/java.lang.Class.getDeclaredField(Class.java:2707)
-      //        at org.bbk.gameserver.Pilot.randomSystemDown$$anonfun$1(Pilot.scala:48)
-      //        at scala.runtime.function.JProcedure1.apply(JProcedure1.java:15)
-      //        at scala.runtime.function.JProcedure1.apply(JProcedure1.java:10)
-      //        at scala.collection.ArrayOps$.foreach$extension(ArrayOps.scala:1323)
-      //        at org.bbk.gameserver.Pilot.randomSystemDown(Pilot.scala:47)
-      //        at org.bbk.gameserver.Pilot.hitMeteor(Pilot.scala:26)
-      //        at org.bbk.gameserver.Pilot.handleRoleCommands(Pilot.scala:9)
-      //        at org.bbk.gameserver.Client.handleCommands(Client.scala:38)
-      //        at org.bbk.gameserver.GameEngine.handlePlayerCommands(GameEngine.scala:107)
-      //        at org.bbk.gameserver.GameEngine.handleCommands(GameEngine.scala:101)
-      //        at org.bbk.gameserver.ConnectionEngine.processCommand(ConnectionEngine.scala:113)
-      //        at org.bbk.gameserver.ConnectionEngine.processClientMessages$$anonfun$1(ConnectionEngine.scala:78)
-      //        at scala.runtime.function.JProcedure1.apply(JProcedure1.java:15)
-      //        at scala.runtime.function.JProcedure1.apply(JProcedure1.java:10)
-      //        at scala.collection.IterableOnceOps.foreach(IterableOnce.scala:619)
-      //        at scala.collection.IterableOnceOps.foreach$(IterableOnce.scala:617)
-      //        at scala.collection.AbstractIterator.foreach(Iterator.scala:1303)
-      //        at org.bbk.gameserver.ConnectionEngine.processClientMessages(ConnectionEngine.scala:75)
-      //        at org.bbk.gameserver.ConnectionEngine.handleClient(ConnectionEngine.scala:59)
-      //        at org.bbk.gameserver.ConnectionEngine.$anonfun$1(ConnectionEngine.scala:24)
-      //        at java.base/java.lang.Thread.run(Thread.java:1623)
+      val field = Ship.getClass.getDeclaredField(decapitalizedSystem)
+      field.setAccessible(true)
+      field.setBoolean(Ship, false)
 
-      System.values.foreach { system =>
-        val field = Ship.getClass.getDeclaredField(system.toString)
-        field.setAccessible(true)
-        field.setBoolean(Ship, false)
-
-        val workingField = Ship.getClass.getDeclaredField(system.toString + "Working")
-        workingField.setAccessible(true)
-        workingField.setBoolean(Ship, false)
-      }
-
-      gameEngine.findRole(classOf[Captain]).foreach { captain =>
+      val workingField = Ship.getClass.getDeclaredField(decapitalizedSystem + "Working")
+      workingField.setAccessible(true)
+      workingField.setBoolean(Ship, false)
+      
+      gameEngine.sendCaptainMessage({ captain =>
         captain.getClass.getDeclaredMethod("push" + system.toString).invoke(captain)
-      }
+      })
     }
-  }
-
-  def callPushFunction(functionName: String): Unit = {
-    val method = this.getClass.getDeclaredMethod(functionName)
-    method.invoke(this)
   }
 
   private def randomSystem(): System = {

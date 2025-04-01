@@ -20,16 +20,13 @@ class GameEngine {
       DAMAGE: ${Config.Ship.DAMAGE}
       ENERGY_GAIN: ${Config.Ship.ENERGY_GAIN}*/
   }
-
-  // TODO: zu viele Vals ohne Caps
   
-
+  
   def gamestart(): Unit = {
     gameLoop()
     sendBroadCast("game:start")
   }
-
-  //TODO: Wo ist der unterschied
+  
   def gamedone(): Unit = ()
   def gamewon(): Unit = ()
 
@@ -150,8 +147,7 @@ class GameEngine {
     eventLoop.setName("GameServerThread-EventLoop")
     eventLoop.start()
   }
-
-  // TODO: EVENTuell zu einem Event machen, um SPAM zu verhindern
+  
   private def dataLoop(): Unit = {
     val dataLoop = new Thread(new Runnable {
       override def run(): Unit = {
@@ -205,10 +201,15 @@ class GameEngine {
     Ship.repairPointChance -= Config.Game.REPAIRPOINTCHANCELOSS
   }
 
-  private def sendCaptainMessage(action: Captain => Unit): Unit = {
+  def sendCaptainMessage(action: Captain => Unit): Unit = {
     findRole(classOf[Captain]).foreach(action)
   }
   private def sendBroadCast(text: String): Unit = {
     playerList.foreach(_.pushMessage(text))
+  }
+
+  def decapitalize(str: String): String = {
+    if (str.isEmpty) str
+    else str.head.toLower + str.tail
   }
 }

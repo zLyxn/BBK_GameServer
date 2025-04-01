@@ -97,7 +97,6 @@ class ConnectionEngine(port: Int) {
     client.disconnect()
     pendingClients -= client
     gameengine.removeRole(client)
-    // TODO: Client returnen zum disconecten
     println(s"Client disconnected: ${client.ip}")
   }
 
