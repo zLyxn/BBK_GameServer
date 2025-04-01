@@ -4,17 +4,26 @@ import java.net.Socket
 
 class Captain(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameEngine) {
 
+  private val excudedPushMethods = Set(
+    "pushData",
+    "pushMessage",
+    "pushStart",
+    "pushLoss",
+    "pushWin",
+    "pushEvent"
+  )
+
   override def pushData(): Unit = {
-    pushHealth()
-    pushShield()
-    pushRepaircolor()
-    pushEnergy()
-    pushShipSpeed()
-    pushCoreAir()
-    pushAirSupply()
-    pushWeapons()
-    pushRepairPoints()
-    pushDrive()
+    this.getClass.getDeclaredMethods
+      .filter(_.getName.startsWith("push"))
+      .foreach { method =>
+        try {
+          if !(excudedPushMethods.contains(method.getName) || (method.getName.contains('$'))) then
+            method.invoke(this)
+        } catch {
+          case e: Exception => println(s"Error invoking method ${method.getName}: ${e.getMessage}")
+        }
+      }
   }
 
   def pushHealth(): Unit = {
