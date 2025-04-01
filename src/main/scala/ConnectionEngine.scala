@@ -10,6 +10,7 @@ class ConnectionEngine(port: Int) {
   @volatile private var running = false
 
   private val gameengine = new GameEngine
+  def getGameEngine: GameEngine = gameengine
 
   def start(): Unit = {
     println(s"Server is running on port $port...")
@@ -18,9 +19,11 @@ class ConnectionEngine(port: Int) {
     while (running) {
       try {
         val socket = serverSocket.accept()
-        val client = new Client(socket)
+        val client = new Client(socket, gameengine)
         pendingClients += client
-        new Thread(() => handleClient(client)).start()
+        val clientThread = new Thread(() => handleClient(client))
+        clientThread.setName("GameServerThread-Client-" + client.hashCode())
+        clientThread.start()
       } catch {
         case e: SocketException =>
           println("ServerSocket closed, stopping server.")
@@ -94,21 +97,19 @@ class ConnectionEngine(port: Int) {
     client.disconnect()
     pendingClients -= client
     gameengine.removeRole(client)
-    // TODO: Client returnen zum disconecten
     println(s"Client disconnected: ${client.ip}")
   }
 
-  private def processCommand(command: String, client: Client): String = {
+  def processCommand(command: String, client: Client): String = {
     val parts = command.stripSuffix("\r\n").split(":") // Remove \r\n and split
     parts.head match {
       case "#ping" => "PONG"
       case "#status" => "Server is running"
       case "#health" if parts.length == 3 => s"health:${parts(1)}/${parts(2)}"
       case "#role" if parts.length == 2 => gameengine.registerRole(client, parts(1)); pendingClients -= client; s"Role set to ${parts(1)}"
-      case "#hitmeteor" if parts.length == 2 => gameengine.hitMeteor(gameengine.Color.toColor(parts(1))); ""
       case "#start" => gameengine.gamestart(); ""
       case "#debug" => gameengine.debug
-      case _ => "error:Unknown command"
+      case _ => gameengine.handleCommands(parts, client)
     }
   }
 }

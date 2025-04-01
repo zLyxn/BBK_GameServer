@@ -1,90 +1,43 @@
 package org.bbk.gameserver
 
 import scala.collection.mutable.ListBuffer
-
-type Player = Captain | Engineer | Pilot | WeaponsOfficer
+import scala.compiletime.ops.any.==
+import scala.util.Random
 
 class GameEngine {
+  private type Player = Config.Player
 
   var running: Boolean = true
   private var nthEvent: Int = 0
-  private val maximumInterval: Int = 180
-  private val slope: Float = 0.7
-  private val horizontalDisplacement: Int = 5
-  private val minimumInterval: Int = 30
 
   def debug: String = {
-    s"""
-      Health: ${Health}
-      Energy: ${Energy}
-      ShipSpeed: ${ShipSpeed}
-      Shield: ${Shield}
-      meteorAmount: ${meteorAmount}
-      repairColor: ${repairColor}
-      RESISTANCE: ${RESISTANCE}
-      DAMAGE: ${DAMAGE}
-      nthEvent: ${nthEvent}
-      EventInterval: ${getEventInterval(nthEvent)}
-    """
+      s"""
+            ${Ship.toString}
+            nthEvent: $nthEvent
+            EventInterval: ${getEventInterval(nthEvent)}
+      """
+      /*RESISTANCE: ${Config.Ship.RESISTANCE}
+      DAMAGE: ${Config.Ship.DAMAGE}
+      ENERGY_GAIN: ${Config.Ship.ENERGY_GAIN}*/
   }
-  enum Color {
-    case Red
-    case Blue
-    case Green
-    case Yellow
-    case Purple
-    case Orange
-    case Black
-    case White
-    case Grey
-    case None
-
-    def asString: String = this.toString
-  }
-
-  object Color {
-    def toColor(color: String): Color = {
-      val colors = Color.values
-      colors.find(_.toString.equalsIgnoreCase(color)).getOrElse(Color.None)
-    }
-  }
-
-  class Stat(var value: Int, val max: Int) {
-    def setValue(newValue: Int): Unit = {
-      value = newValue.max(0).min(max)
-    }
-    def -=(amount: Int): Unit = {
-      setValue(value - amount)
-    }
-
-    override def toString: String = s"Value: ${value} - Max: ${max}"// + "-" * 5 + super.toString
-  }
-
-  object Health extends Stat(100, 100)
-  object Energy extends Stat(100, 100)
-  object ShipSpeed extends Stat(100, 100)
-  var Shield: Boolean = false
-  var meteorAmount: Int = 0
-  var repairColor: Color = Color.None
-  val RESISTANCE: Float = 0.5
-  val DAMAGE: Int = 10
-
-  // TODO: zu viele Vals ohne Caps
-
-  def hitMeteor(meteorColor: Color): Unit = {
-    if(repairColor == meteorColor){
-      // positiv: + neue Energie
-    }else{
-      Health -= (DAMAGE*(1 - (if Shield then RESISTANCE else 0))).toInt
-    }
-  }
-
+  
+  
   def gamestart(): Unit = {
     gameLoop()
+    sendBroadCast("game:start")
   }
+  
   def gamedone(): Unit = ()
-  def gameover(): Unit = ()
   def gamewon(): Unit = ()
+
+  def gameover(reason: String): Unit = {
+    print("Game Over: " + reason)
+    sendBroadCast(s"game:over: $reason")
+
+    // TODO: Ein richtiges gameover
+    //  mit beenden des spiels
+    //  und der Option ein neues Spiel zu starten
+  }
   
   private var playerList: ListBuffer[Player] = ListBuffer[Player]()
 
@@ -98,10 +51,10 @@ class GameEngine {
     }
 
     val player: Option[Player] = role match {
-      case "Captain" => Some(new Captain(client.socket))
-      case "Engineer" => Some(new Engineer(client.socket))
-      case "Pilot" => Some(new Pilot(client.socket))
-      case "WeaponsOfficer" => Some(new WeaponsOfficer(client.socket))
+      case "Captain" => Some(new Captain(client.socket, this))
+      case "Engineer" => Some(new Engineer(client.socket, this))
+      case "Pilot" => Some(new Pilot(client.socket, this))
+      case "WeaponsOfficer" => Some(new WeaponsOfficer(client.socket, this))
       case _ =>
         println(s"Unknown role: $role")
         return s"error:Unknown role $role"
@@ -135,27 +88,128 @@ class GameEngine {
     playerList.clone().map(removeRole)
   }
 
-  def getEventInterval(nthEvent: Int): Int = {
-    ((maximumInterval-minimumInterval)/(1+ Math.pow(Math.E,(slope*(nthEvent-horizontalDisplacement))))+minimumInterval).toInt
+  private def getEventInterval(nthEvent: Int): Int = {
+    ((Config.Game.MAXIMUMINTERVAL-Config.Game.MINIMUMINTERVALL)/(1+ Math.pow(Math.E,(Config.Game.SLOPE*(nthEvent-Config.Game.HORIZONTALDISPLACEMENT))))+Config.Game.MINIMUMINTERVALL).toInt
   }
 
-  def gameLoop(): Unit = {
-    val thread = new Thread(new Runnable {
+  def handleCommands(parts: Array[String], client: Client): String = {
+    val player = playerList.find(_.socket == client.socket)
+    player match {
+      case Some(p) => handlePlayerCommands(parts, p)
+      case None => s"Player not found for client: ${client.ip}"
+    }
+  }
+
+  private def handlePlayerCommands(parts: Array[String], player: Player): String = {
+    val commandResult = player.handleCommands(parts)
+    if (commandResult.isEmpty) {
+      s"error:Unknown command:${parts.head}"
+    } else {
+      commandResult.get
+    }
+  }
+
+  private def gameLoop(): Unit = {
+    eventLoop()
+    dataLoop()
+    tickLoop()
+  }
+
+  private def startEvent(): Unit = {
+    val activeEventType: EventType = Events.startRandomEvent()
+    if(activeEventType != EventType.None) {
+      sendCaptainMessage(_.pushEvent(activeEventType))
+    }
+  }
+
+  def findRole[T](role: Class[T]): ListBuffer[T] = {
+    playerList.filter(_.getClass == role).asInstanceOf[ListBuffer[T]]
+  }
+  private def eventLoop(): Unit = {
+    val eventLoop = new Thread(new Runnable {
       var count: Int = 0
 
       override def run(): Unit = {
         while (running) {
           count += 1
           Thread.sleep(1000)
-          var eventInterval = getEventInterval(nthEvent)
+          Events.solveEvents()
+          val eventInterval = getEventInterval(nthEvent)
           if count >= eventInterval then {
             nthEvent += 1
-            println(s"Event triggert: ${nthEvent} after ${count} seconds")
+            println(s"Event triggert: ${nthEvent} after ${count} seconds") // Debug
             count = 0
+            startEvent()
           }
         }
       }
     })
-    thread.start()
+    eventLoop.setName("GameServerThread-EventLoop")
+    eventLoop.start()
+  }
+  
+  private def dataLoop(): Unit = {
+    val dataLoop = new Thread(new Runnable {
+      override def run(): Unit = {
+        while (running) {
+          Thread.sleep(Config.Game.DATAUPDATEINTERVAL)
+          playerList.foreach(_.pushData())
+        }
+      }
+    })
+    dataLoop.setName("GameServerThread-DataLoop")
+    dataLoop.start()
+  }
+
+  private def tickLoop(): Unit = {
+    val tickLoop = new Thread(new Runnable {
+      override def run(): Unit = {
+        while (running) {
+          Thread.sleep(Config.Game.TICKINTERVAL)
+          checkCoreAir()
+          createRepairPoint()
+        }
+      }
+    })
+    tickLoop.setName("GameServerThread-TickLoop")
+    tickLoop.start()
+  }
+
+  private def checkCoreAir(): Unit = {
+    if(!Ship.airSupply){
+      if (Ship.coreAir.value <= 0) {
+        gameover(Config.Game.Deathmessages.SUFFOCATED)
+      }else{
+        reduceCoreAir()
+      }
+    }
+  }
+
+  private def reduceCoreAir(): Unit = {
+    if (Random.nextInt(100) < Config.Game.COREAIRLOSSCHANCE) {
+      Ship.coreAir -= 1
+      sendCaptainMessage(_.pushCoreAir())
+      //TODO: vielleicht zu viel Traffic
+    }
+  }
+  
+  private def createRepairPoint(): Unit = {
+    if (Random.nextInt(100) < Ship.repairPointChance.value) {
+      Ship.repairPoints += 1
+      sendCaptainMessage(_.pushRepairPoints())
+    }
+    Ship.repairPointChance -= Config.Game.REPAIRPOINTCHANCELOSS
+  }
+
+  def sendCaptainMessage(action: Captain => Unit): Unit = {
+    findRole(classOf[Captain]).foreach(action)
+  }
+  private def sendBroadCast(text: String): Unit = {
+    playerList.foreach(_.pushMessage(text))
+  }
+
+  def decapitalize(str: String): String = {
+    if (str.isEmpty) str
+    else str.head.toLower + str.tail
   }
 }

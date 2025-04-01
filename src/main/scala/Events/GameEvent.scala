@@ -1,5 +1,6 @@
 package org.bbk.gameserver
 
+
 trait GameEvent {
   var isActive: Boolean = false
   var startTime: Int = 0
