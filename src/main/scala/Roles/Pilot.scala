@@ -51,7 +51,7 @@ class Pilot(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameE
       val workingField = Ship.getClass.getDeclaredField(decapitalizedSystem + "Working")
       workingField.setAccessible(true)
       workingField.setBoolean(Ship, false)
-      
+
       gameEngine.sendCaptainMessage({ captain =>
         captain.getClass.getDeclaredMethod("push" + system.toString).invoke(captain)
       })
