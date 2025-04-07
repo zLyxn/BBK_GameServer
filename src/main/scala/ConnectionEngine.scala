@@ -122,7 +122,7 @@ class ConnectionEngine(port: Int, logger: Logger) {
       case "#ping" => "PONG"
       case "#status" => "Server is running"
       case "#health" if parts.length == 3 => s"health:${parts(1)}/${parts(2)}"
-      case "#role" if parts.length == 2 => gameengine.registerRole(client, parts(1)); pendingClients -= client; s"Role set to ${parts(1)}"
+      case "#role" if parts.length == 2 => pendingClients -= client; gameengine.registerRole(client, parts(1));
       case "#start" => gameengine.gamestart(); ""
       case "#debug" => gameengine.debug
       case _ => gameengine.handleCommands(parts, client)
