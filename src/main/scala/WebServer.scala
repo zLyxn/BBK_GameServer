@@ -18,7 +18,7 @@ class WebServer(connectionEngine: ConnectionEngine):
   try {
     server = HttpServer.create(new InetSocketAddress(Config.Connection.WEBPORT), 0)
   } catch {
-    case e: java.net.BindException =>
+    case _: java.net.BindException =>
       println(s"Port ${Config.Connection.WEBPORT} is already in use. Trying to find an available port...")
       server = HttpServer.create(new InetSocketAddress(0), 0)
     case e: Exception =>
