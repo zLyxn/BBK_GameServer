@@ -5,12 +5,59 @@
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <title>Dashboard</title>
           <style>
-            body { font-family: Arial, sans-serif; text-align: center; }
+            body {
+                font-family: Bahnschrift, sans-serif;
+                text-align: center;
+            }
+            .ip{
+                font-family: Bahnschrift Condensed, sans-serif;
+            }
             .status { font-weight: bold; }
             .online { color: green; }
             .offline { color: red; }
             #commandField { display: none; }
             footer { position: fixed; bottom: 0; width: 100%; padding: 10px; }
+            .btn{
+                background-color: #8080ff;
+                border: none;
+                color: white;
+                padding: 10px 12px;
+                margin: 4px 2px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                cursor: pointer;
+                border-radius: 100px;
+                width: 15%;
+            }
+            .btn:hover {
+                background-color: #3838ee;
+            }
+            .btn:active{
+                transform: translateY(4px);
+            }
+            hr{
+                width:25%;
+            }
+            #commandInput{
+                border-radius: 100px;
+                width: 15%;
+                padding: 10px 12px;
+                margin: 4px 2px;
+                font-family: Bahnschrift, sans-serif;
+            }
+            #commandInput::-webkit-input-placeholder {
+                font-family: Bahnschrift, sans-serif;
+            }
+            #commandInput:-ms-input-placeholder {
+                font-family: Bahnschrift, sans-serif;
+            }
+            #commandInput:-moz-placeholder {
+                font-family: Bahnschrift, sans-serif;
+            }
+
+
           </style>
           <script>
             if ('serviceWorker' in navigator) {
@@ -50,15 +97,21 @@
         </head>
         <body>
           <h1>Welcome to the Dashboard!</h1>
+          <hr>
           <p>Game Server: <span id="gameServerStatus" class="status">Checking...</span></p>
           <p>Web Server: <span id="webServerStatus" class="status">Checking...</span></p>
-          <p>IP Address: $$IP$$:$$GAMEPORT$$</p>
-          <a href="/start">Start the GameServer</a><br>
-          <a href="/stop">Stop the GameServer</a><br>
-          <a href="/exit">Stop the WebServer</a>
+          <p class="ip">IP Address: $$IP$$:$$GAMEPORT$$</p>
+          <hr>
+          <a href="/start" class="btn">Start the GameServer</a><br>
+          <a href="/stop" class="btn">Stop the GameServer</a><br>
+          <a href="/exit" class="btn">Stop the WebServer</a>
           <div id="commandField">
-            <input type="text" id="commandInput" placeholder="Enter value"><br>
-            <a id="submit" href="#" onclick="updateLink()">Send command</a>
+              <hr>
+              <label for="commandInput">Enter command:</label>
+              <br>
+              <input type="text" id="commandInput" placeholder="Enter value">
+              <br>
+              <a id="submit" class="btn" href="#" onclick="updateLink()">Send command</a>
           </div>
           <script>
             function updateLink() {
