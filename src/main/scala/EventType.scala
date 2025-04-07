@@ -2,6 +2,7 @@ package org.bbk.gameserver
 
 enum EventType {
   case ShieldDownEvent
+  case AttackEvent
   case None
 }
 
