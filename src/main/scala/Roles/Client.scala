@@ -18,7 +18,7 @@ class Client(var socket: Socket, gameEngine: GameEngine) {
       }
     } catch {
       case e: IOException =>
-        e.printStackTrace()
+        gameEngine.logger.error(e.getMessage)
     }
   }
   

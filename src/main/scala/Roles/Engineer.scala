@@ -32,7 +32,7 @@ class Engineer(socket: Socket, gameEngine: GameEngine) extends Client(socket, ga
       Ship.shield = state
       gameEngine.findRole(classOf[Captain]).foreach(_.pushShield())
     }
-    println(s"Ship.Shield: ${Ship.shield}")
+    gameEngine.logger.trace(s"Ship.Shield: ${Ship.shield}")
   }
   private def setDrive(state: Boolean): Unit = {
     Ship.drive = state

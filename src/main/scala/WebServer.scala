@@ -3,6 +3,7 @@ package org.bbk.gameserver
 import com.sun.net.httpserver.*
 
 import scala.compiletime.uninitialized
+import com.typesafe.scalalogging.Logger
 //import com.sun.net.httpserver.HttpsConfigurator
 
 import java.net.{InetAddress, InetSocketAddress}
@@ -11,7 +12,7 @@ import javax.net.ssl.{KeyManagerFactory, SSLContext, TrustManagerFactory}
 import scala.io.Source
 
 
-class WebServer(connectionEngine: ConnectionEngine):
+class WebServer(connectionEngine: ConnectionEngine, val logger: Logger):
   //private val server = HttpServer.create(new InetSocketAddress(Config.Connection.WEBPORT), 0)
 
   private var server: HttpServer = uninitialized
@@ -19,10 +20,10 @@ class WebServer(connectionEngine: ConnectionEngine):
     server = HttpServer.create(new InetSocketAddress(Config.Connection.WEBPORT), 0)
   } catch {
     case _: java.net.BindException =>
-      println(s"Port ${Config.Connection.WEBPORT} is already in use. Trying to find an available port...")
+      logger.warn(s"Port ${Config.Connection.WEBPORT} is already in use. Trying to find an available port...")
       server = HttpServer.create(new InetSocketAddress(0), 0)
     case e: Exception =>
-      println(s"Error starting Webserver on port ${Config.Connection.WEBPORT}: ${e.getMessage}")
+      logger.error(s"Error starting Webserver on port ${Config.Connection.WEBPORT}: ${e.getMessage}")
       sys.exit(1)
   }
 
@@ -110,9 +111,15 @@ class WebServer(connectionEngine: ConnectionEngine):
       exchange.getResponseHeaders.set("Content-Type", "application/javascript")
       sendResponse(exchange, 200, response)
     })
+
+    server.createContext("/logs", exchange =>
+      val response = s"<html><style> body {font-family: Bahnschrift, sans-serif;text-align: center;} .btn{background-color: #8080ff;border: none;color: white;padding: 10px 12px;margin: 4px 2px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px;cursor: pointer;border-radius: 100px;width: 15%;} .btn:hover {background-color: #3838ee;} .btn:active{transform: translateY(4px);}</style></head><body>${logger}</body></html>" //<a href="/"  class=\"btn\">Return to dashboard</a>
+      sendResponse(exchange, 200, response)
+    )
+
     server.setExecutor(null)
     server.start()
-    println(s"WebServer is running on http${if (server.isInstanceOf[HttpsServer]) "s" else ""}://${InetAddress.getLocalHost.getHostAddress}:${server.getAddress.getPort}/")
+    logger.info(s"WebServer is running on http${if (server.isInstanceOf[HttpsServer]) "s" else ""}://${InetAddress.getLocalHost.getHostAddress}:${server.getAddress.getPort}/")
 
   // TODO consider stopping the server when the WebServer is stopping
   def stop(): Unit = server.stop(0)
