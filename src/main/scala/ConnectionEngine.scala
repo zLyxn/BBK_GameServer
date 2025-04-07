@@ -2,18 +2,32 @@ package org.bbk.gameserver
 
 import java.net.{ServerSocket, SocketException}
 import scala.collection.mutable.ListBuffer
+import scala.compiletime.uninitialized
 import scala.io.BufferedSource
 
 class ConnectionEngine(port: Int) {
-  private var serverSocket = new ServerSocket(port)
+  private var serverSocket: ServerSocket = uninitialized
+  try {
+    serverSocket = new ServerSocket(port)
+  } catch {
+    case e: java.net.BindException =>
+      println(s"Port $port is already in use. Trying to find an available port...")
+      serverSocket = new ServerSocket(0)
+    case e: Exception =>
+      println(s"Error starting server on port $port: ${e.getMessage}")
+      sys.exit(1)
+  }
+  //private var serverSocket = new ServerSocket(port)
   private val pendingClients = ListBuffer[Client]()
   @volatile private var running = false
 
   private val gameengine = new GameEngine
   def getGameEngine: GameEngine = gameengine
+  
+  def getServerSocket: ServerSocket = serverSocket
 
   def start(): Unit = {
-    println(s"Server is running on port $port...")
+    println(s"Server is running on port ${serverSocket.getLocalPort}...")
     running = true
     if(serverSocket.isClosed) serverSocket = new ServerSocket(port)
     while (running) {
