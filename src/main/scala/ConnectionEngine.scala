@@ -71,7 +71,7 @@ class ConnectionEngine(port: Int, logger: Logger) {
   private def handleClient(client: Client): Unit = {
     try {
       client.status = "Connected"
-      if !client.silent then logger.info(s"New client connected: ${client.ip}")
+      if !client.silent then logger.info(s"New client connected: ${client.ip} ${client.silent}")
       processClientMessages(client)
     } catch {
       case e: SocketException if client.socket.isClosed =>
