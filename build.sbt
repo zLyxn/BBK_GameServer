@@ -1,4 +1,4 @@
-ThisBuild / version := "1.0-PRERELEASE-1"
+ThisBuild / version := "1.0-PRERELEASE-2"
 
 ThisBuild / scalaVersion := "3.6.3"
 //libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.17" % Test
