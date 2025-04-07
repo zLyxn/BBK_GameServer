@@ -10,7 +10,7 @@ class ConnectionEngine(port: Int) {
   try {
     serverSocket = new ServerSocket(port)
   } catch {
-    case e: java.net.BindException =>
+    case _: java.net.BindException =>
       println(s"Port $port is already in use. Trying to find an available port...")
       serverSocket = new ServerSocket(0)
     case e: Exception =>
