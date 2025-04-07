@@ -61,4 +61,7 @@ class Pilot(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameE
   private def randomSystem(): System = {
     System.values(Random.nextInt(System.values.length))
   }
+  def pushNewEnemy(): Unit = {
+    pushMessage(s"#newEnemy")
+  }
 }

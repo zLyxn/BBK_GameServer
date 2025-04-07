@@ -116,7 +116,7 @@ class GameEngine {
   }
 
   private def startEvent(): Unit = {
-    val activeEventType: EventType = Events.startRandomEvent()
+    val activeEventType: EventType = Events.startRandomEvent(this)
     if(activeEventType != EventType.None) {
       sendCaptainMessage(_.pushEvent(activeEventType))
     }
