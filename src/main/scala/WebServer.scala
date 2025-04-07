@@ -1,6 +1,8 @@
 package org.bbk.gameserver
 
 import com.sun.net.httpserver.*
+
+import scala.compiletime.uninitialized
 //import com.sun.net.httpserver.HttpsConfigurator
 
 import java.net.{InetAddress, InetSocketAddress}
@@ -10,7 +12,19 @@ import scala.io.Source
 
 
 class WebServer(connectionEngine: ConnectionEngine):
-  private val server = HttpServer.create(new InetSocketAddress(Config.Connection.WEBPORT), 0)
+  //private val server = HttpServer.create(new InetSocketAddress(Config.Connection.WEBPORT), 0)
+
+  private var server: HttpServer = uninitialized
+  try {
+    server = HttpServer.create(new InetSocketAddress(Config.Connection.WEBPORT), 0)
+  } catch {
+    case e: java.net.BindException =>
+      println(s"Port ${Config.Connection.WEBPORT} is already in use. Trying to find an available port...")
+      server = HttpServer.create(new InetSocketAddress(0), 0)
+    case e: Exception =>
+      println(s"Error starting Webserver on port ${Config.Connection.WEBPORT}: ${e.getMessage}")
+      sys.exit(1)
+  }
 
   // Load the keystore
   //private val keystore = KeyStore.getInstance("JKS")
@@ -47,7 +61,7 @@ class WebServer(connectionEngine: ConnectionEngine):
 
   private val indexPage: String = new ResourceHandler("/public/index.html").getResponse
     .replace("$$IP$$", InetAddress.getLocalHost.getHostAddress)
-    .replace("$$GAMEPORT$$", Config.Connection.GAMEPORT.toString)
+    .replace("$$GAMEPORT$$", connectionEngine.getServerSocket.getLocalPort.toString)
   private val serviceWorkerScript: String = new ResourceHandler("/public/serviceWorker.js").getResponse
 
   def start(): Unit =
@@ -98,7 +112,7 @@ class WebServer(connectionEngine: ConnectionEngine):
     })
     server.setExecutor(null)
     server.start()
-    println(s"WebServer is running on http${if (server.isInstanceOf[HttpsServer]) "s" else ""}://${InetAddress.getLocalHost.getHostAddress}:${Config.Connection.WEBPORT}/")
+    println(s"WebServer is running on http${if (server.isInstanceOf[HttpsServer]) "s" else ""}://${InetAddress.getLocalHost.getHostAddress}:${server.getAddress.getPort}/")
 
   // TODO consider stopping the server when the WebServer is stopping
   def stop(): Unit = server.stop(0)
