@@ -82,7 +82,7 @@ class GameEngine(val logger: Logger) {
 
   def removeRole(client: Client): Client = {
     playerList = playerList.filterNot(_.socket == client.socket)
-    logger.info(s"Player removed: ${client.ip}")
+    if !client.silent then logger.info(s"Player removed: ${client.ip}")
     client
   }
 

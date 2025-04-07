@@ -56,7 +56,17 @@
             #commandInput:-moz-placeholder {
                 font-family: Bahnschrift, sans-serif;
             }
-
+            #consoleOutput{
+                line-height: 75%;
+                text-align: left;
+                width: 60%;
+                margin: auto;
+                height: 30em;
+                overflow-y: scroll;
+                border: 1px solid #ccc;
+                padding: 10px;
+                background-color: #f9f9f9;
+            }
 
           </style>
           <script>
@@ -90,7 +100,22 @@
                   console.error("Error fetching status:", error);
                 });
             }
+            function updateConsoleOutput() {
+              fetch('/logs')
+                .then(response => response.text())
+                .then(consoleOutput => {
+                  const consoleDiv = document.getElementById('consoleOutput');
+                  if (consoleDiv.innerHTML.replace(/\s/g, '') !== consoleOutput.replace(/<\/?html>|<\/?body>/g, '').replace(/\s/g, '')) {
+                    consoleDiv.innerHTML = consoleOutput;
+                    consoleDiv.scrollTop = consoleDiv.scrollHeight;
+                  }
+                })
+                .catch(error => {
+                        console.error("Error sending command:", error);
+                    });
 
+            }
+            setInterval(updateConsoleOutput, 1000);
             setInterval(updateGameServerStatus, 5000);
             window.onload = updateGameServerStatus;
           </script>
@@ -107,17 +132,37 @@
           <a href="/exit" class="btn">Stop the WebServer</a>
           <div id="commandField">
               <hr>
+              <h2>Console:</h2>
+              <pre id="consoleOutput">
+
+              </pre>
               <label for="commandInput">Enter command:</label>
               <br>
               <input type="text" id="commandInput" placeholder="Enter value">
               <br>
-              <a id="submit" class="btn" href="#" onclick="updateLink()">Send command</a>
+              <a id="submit" class="btn" href="#">Send command</a>
           </div>
           <script>
-            function updateLink() {
-              const inputValue = document.getElementById('commandInput').value;
-              const baseUrl = '/sendCommand';
-              document.getElementById('submit').href = baseUrl + '?' + inputValue;
+            document.getElementById("submit").addEventListener("click", updateLink);
+            function updateLink(event) {
+                event.preventDefault();
+                const inputValue = document.getElementById('commandInput').value;
+                const baseUrl = '/sendCommand';
+                const url = new URL(baseUrl, window.location.origin);
+                url.searchParams.set(inputValue, '');
+                fetch(url)
+                    .then(response => {
+                        if (response.ok) {
+                            console.log("Command sent successfully");
+                            document.getElementById('commandInput').value = ''; // Clear the input field
+                        } else {
+                            console.error("Error sending command:", response.statusText);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error sending command:", error);
+                    });
+                updateConsoleOutput();
             }
           </script>
           <footer>

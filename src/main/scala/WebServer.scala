@@ -96,9 +96,11 @@ class WebServer(connectionEngine: ConnectionEngine, val logger: Logger):
     )
     server.createContext("/sendCommand", exchange =>
       val query: String = exchange.getRequestURI.toString
-      val command: String = query.split("\\?").last.prepended('#')
-      val localClient = new Client(null, connectionEngine.getGameEngine)
-      val response = s"<html><style> body {font-family: Bahnschrift, sans-serif;text-align: center;} .btn{background-color: #8080ff;border: none;color: white;padding: 10px 12px;margin: 4px 2px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px;cursor: pointer;border-radius: 100px;width: 15%;} .btn:hover {background-color: #3838ee;} .btn:active{transform: translateY(4px);}</style></head><body><h1>Command ($command) received:</h1> ${connectionEngine.processCommand(command, localClient).replace("\r\n", "<br>")}</body><a href=\"/\" class=\"btn\">Return to dashboard</a></html>"
+      val command: String = query.split("\\?").last.prepended('#').replace("=", "")
+      val localClient = new Client(null, connectionEngine.getGameEngine, silent = true)
+      val output = connectionEngine.processCommand(command, localClient)
+      logger.debug(s"$command : $output")
+      val response = s"<html><style> body {font-family: Bahnschrift, sans-serif;text-align: center;} .btn{background-color: #8080ff;border: none;color: white;padding: 10px 12px;margin: 4px 2px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px;cursor: pointer;border-radius: 100px;width: 15%;} .btn:hover {background-color: #3838ee;} .btn:active{transform: translateY(4px);}</style></head><body><h1>Command ($command) received:</h1> ${output.replace("\r\n", "<br>")}</body><a href=\"/\" class=\"btn\">Return to dashboard</a></html>"
       sendResponse(exchange, 200, response)
       localClient.disconnect()
     )
@@ -113,7 +115,7 @@ class WebServer(connectionEngine: ConnectionEngine, val logger: Logger):
     })
 
     server.createContext("/logs", exchange =>
-      val response = s"<html><style> body {font-family: Bahnschrift, sans-serif;text-align: center;} .btn{background-color: #8080ff;border: none;color: white;padding: 10px 12px;margin: 4px 2px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px;cursor: pointer;border-radius: 100px;width: 15%;} .btn:hover {background-color: #3838ee;} .btn:active{transform: translateY(4px);}</style></head><body>$getLogs</body></html>" //<a href="/"  class=\"btn\">Return to dashboard</a>
+      val response = s"<html><body>$getLogs</body></html>" //<a href="/"  class=\"btn\">Return to dashboard</a>
       sendResponse(exchange, 200, response)
     )
 
@@ -126,12 +128,12 @@ class WebServer(connectionEngine: ConnectionEngine, val logger: Logger):
     val source = Source.fromFile("logs/game-server.log")
     try source.mkString
       .replace("\n", "<br>")
-      .replaceAll("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}", "<span style='color:blue;'>$0</span>")
-      .replaceAll("TRACE", "<span style='color:gray;'>$0</span>")
-      .replaceAll("DEBUG", "<span style='color:purple;'>$0</span>")
-      .replaceAll("INFO", "<span style='color:green;'>$0</span>")
-      .replaceAll("WARN", "<span style='color:orange;'>$0</span>")
-      .replaceAll("ERROR", "<span style='color:red;'>$0</span>")
+      .replaceAll("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}", "<span style=\"color:blue;\">$0</span>")
+      .replaceAll("TRACE", "<span style=\"color:gray;\">$0</span>")
+      .replaceAll("DEBUG", "<span style=\"color:purple;\">$0</span>")
+      .replaceAll("INFO", "<span style=\"color:green;\">$0</span>")
+      .replaceAll("WARN", "<span style=\"color:orange;\">$0</span>")
+      .replaceAll("ERROR", "<span style=\"color:red;\">$0</span>")
       .replaceAll("(?i)(https?://\\S+)", "<a href=\"$1\">$1</a>")
 
     finally source.close()
@@ -142,6 +144,7 @@ class WebServer(connectionEngine: ConnectionEngine, val logger: Logger):
 
   //TODO: Move to a separate class; this is a utility method for /thread
   private def getAllThreads: Array[Thread] = {
+    // GET FUNC MAIN THREAD HERE
     val group = Thread.currentThread().getThreadGroup
     val threads = new Array[Thread](group.activeCount())
     group.enumerate(threads)

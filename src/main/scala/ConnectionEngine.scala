@@ -71,7 +71,7 @@ class ConnectionEngine(port: Int, logger: Logger) {
   private def handleClient(client: Client): Unit = {
     try {
       client.status = "Connected"
-      logger.info(s"New client connected: ${client.ip}")
+      if !client.silent then logger.info(s"New client connected: ${client.ip}")
       processClientMessages(client)
     } catch {
       case e: SocketException if client.socket.isClosed =>
@@ -113,7 +113,7 @@ class ConnectionEngine(port: Int, logger: Logger) {
     client.disconnect()
     pendingClients -= client
     gameengine.removeRole(client)
-    logger.info(s"Client disconnected: ${client.ip}")
+    if !client.silent then logger.info(s"Client disconnected: ${client.ip}")
   }
 
   def processCommand(command: String, client: Client): String = {
