@@ -174,14 +174,19 @@
           </div>
 
           <script>
+              document.getElementById("commandInput").addEventListener("keypress", function(event) {
+                  if (event.key === "Enter") {
+                      event.preventDefault();
+                      document.getElementById("submit").click();
+                  }
+              });
             document.getElementById("submit").addEventListener("click", updateLink);
             function updateLink(event) {
                 event.preventDefault();
                 const inputValue = document.getElementById('commandInput').value;
                 const baseUrl = '/sendCommand';
-                const url = new URL(baseUrl, window.location.origin);
-                url.searchParams.set(inputValue, '');
-                fetch(url)
+
+                fetch(baseUrl + '?' + inputValue)
                     .then(response => {
                         if (response.ok) {
                             console.log("Command sent successfully");
