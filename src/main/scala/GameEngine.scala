@@ -91,16 +91,14 @@ class GameEngine(val logger: Logger) {
   }
 
   private def getEventInterval(nthEvent: Int): Int = {
-    ((Config.Game.MAXIMUMINTERVAL-Config.Game.MINIMUMINTERVALL)/(1+ Math.pow(Math.E,(Config.Game.SLOPE*(nthEvent-Config.Game.HORIZONTALDISPLACEMENT))))+Config.Game.MINIMUMINTERVALL).toInt
+    ((Config.Game.MAXIMUMINTERVAL-Config.Game.MINIMUMINTERVALL)/(1+ Math.pow(Math.E, Config.Game.SLOPE*(nthEvent-Config.Game.HORIZONTALDISPLACEMENT)))+Config.Game.MINIMUMINTERVALL).toInt
   }
 
   def handleCommands(parts: Array[String], client: Client): String = {
     val player = playerList.find(_.socket == client.socket)
     player match {
       case Some(p) => handlePlayerCommands(parts, p)
-      case None => {
-        client.handleClientCommands(parts)
-      }
+      case None => client.handleClientCommands(parts)
     }
   }
 
@@ -153,12 +151,10 @@ class GameEngine(val logger: Logger) {
   }
   
   private def dataLoop(): Unit = {
-    val dataLoop = new Thread(new Runnable {
-      override def run(): Unit = {
-        while (running) {
-          Thread.sleep(Config.Game.DATAUPDATEINTERVAL)
-          playerList.foreach(_.pushData())
-        }
+    val dataLoop = new Thread(() => {
+      while (running) {
+        Thread.sleep(Config.Game.DATAUPDATEINTERVAL)
+        playerList.foreach(_.pushData())
       }
     })
     dataLoop.setName("GameServerThread-DataLoop")
@@ -166,13 +162,11 @@ class GameEngine(val logger: Logger) {
   }
 
   private def tickLoop(): Unit = {
-    val tickLoop = new Thread(new Runnable {
-      override def run(): Unit = {
-        while (running) {
-          Thread.sleep(Config.Game.TICKINTERVAL)
-          checkCoreAir()
-          createRepairPoint()
-        }
+    val tickLoop = new Thread(() => {
+      while (running) {
+        Thread.sleep(Config.Game.TICKINTERVAL)
+        checkCoreAir()
+        createRepairPoint()
       }
     })
     tickLoop.setName("GameServerThread-TickLoop")
@@ -214,6 +208,6 @@ class GameEngine(val logger: Logger) {
 
   def decapitalize(str: String): String = {
     if (str.isEmpty) str
-    else str.head.toLower + str.tail
+    else str.head.toString.toLowerCase() + str.tail
   }
 }
