@@ -21,7 +21,7 @@ class Captain(socket: Socket, gameEngine: GameEngine) extends Client(socket, gam
           if !(excudedPushMethods.contains(method.getName) || (method.getName.contains('$'))) then
             method.invoke(this)
         } catch {
-          case e: Exception => gameEngine.logger.error(s"Error invoking method ${method.getName}: ${e.getMessage}")
+          case e: Exception => println(s"Error invoking method ${method.getName}: ${e.getMessage}")
         }
       }
   }

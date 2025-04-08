@@ -7,4 +7,3 @@ class ShieldDownEvent extends GameEvent{
   length =  Some(20)
   startTime = 10
 }
-//TODO: overide def trigger

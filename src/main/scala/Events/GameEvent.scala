@@ -6,7 +6,7 @@ trait GameEvent {
   var startTime: Int = 0
   var length: Option[Int] = None
   var probability: Option[Float] = None
-  def trigger(gameEngine: GameEngine): Unit = (isActive = true)
+  def trigger(): Unit = (isActive = true)
   def solve(): Unit = {
     length match {
       case Some(l) if l <= 0 => isActive = false
