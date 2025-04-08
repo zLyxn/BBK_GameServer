@@ -98,7 +98,9 @@ class GameEngine(val logger: Logger) {
     val player = playerList.find(_.socket == client.socket)
     player match {
       case Some(p) => handlePlayerCommands(parts, p)
-      case None => s"Player not found for client: ${client.ip}"
+      case None => {
+        client.handleClientCommands(parts)
+      }
     }
   }
 
