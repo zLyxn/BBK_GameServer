@@ -6,5 +6,12 @@ class ShieldDownEvent extends GameEvent{
   probability = Some(0.9f)
   length =  Some(20)
   startTime = 10
+
+
+  override def trigger(gameEngine: GameEngine): Unit = {
+    super.trigger(gameEngine)
+    Ship.shield = false
+    Ship.shieldWorking = false
+    gameEngine.findRole(classOf[Captain]).foreach(_.pushShield())
+  }
 }
-//TODO: overide def trigger

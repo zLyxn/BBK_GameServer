@@ -7,6 +7,5 @@ class AttackEvent extends GameEvent{
     super.trigger(gameEngine)
     gameEngine.findRole(classOf[Pilot]).foreach(_.pushNewEnemy())
     gameEngine.findRole(classOf[WeaponsOfficer]).foreach(_.pushNewEnemy())
-    gameEngine.findRole(classOf[Captain]).foreach(_.pushEvent(EventType.AttackEvent))
   }
 }

@@ -31,9 +31,11 @@ class Captain(socket: Socket, gameEngine: GameEngine) extends Client(socket, gam
   }
   def pushShield(): Unit = {
     pushMessage(s"#shield:${Ship.shield}")
+    pushMessage(s"#shieldWorking:${Ship.shieldWorking}")
   }
   def pushWeapons(): Unit = {
     pushMessage(s"#weapons:${Ship.weapons}")
+    pushMessage(s"#weaponsWorking:${Ship.weaponsWorking}")
   }
   def pushRepaircolor(): Unit = {
     pushMessage(s"#repaircolor:${Ship.repairColor}")
@@ -52,11 +54,13 @@ class Captain(socket: Socket, gameEngine: GameEngine) extends Client(socket, gam
   }
   def pushAirSupply(): Unit = {
     pushMessage(s"#airSupply:${Ship.airSupply}")
+    pushMessage(s"#airSupplyWorking:${Ship.airSupplyWorking}")
   }
   def pushRepairPoints(): Unit = {
     pushMessage(s"#repairPoints:${Ship.repairPoints}")
   }
   def pushDrive(): Unit = {
     pushMessage(s"#drive:${Ship.drive}")
+    pushMessage(s"#driveWorking:${Ship.driveWorking}")
   }
 }
