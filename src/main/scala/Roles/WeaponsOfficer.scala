@@ -52,4 +52,8 @@ class WeaponsOfficer(socket: Socket, gameEngine: GameEngine) extends Client(sock
   def pushWeapons(): Unit = {
     pushMessage(s"#weapons:${Ship.weapons}")
   }
+
+  def pushNewEnemy(): Unit = {
+    pushMessage(s"#newEnemy")
+  }
 }

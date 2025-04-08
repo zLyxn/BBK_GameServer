@@ -1,33 +1,35 @@
 package org.bbk.gameserver
 
+import com.typesafe.scalalogging.Logger
+
 import java.net.{ServerSocket, SocketException}
 import scala.collection.mutable.ListBuffer
 import scala.compiletime.uninitialized
 import scala.io.BufferedSource
 
-class ConnectionEngine(port: Int) {
+class ConnectionEngine(port: Int, logger: Logger) {
   private var serverSocket: ServerSocket = uninitialized
   try {
     serverSocket = new ServerSocket(port)
   } catch {
-    case e: java.net.BindException =>
-      println(s"Port $port is already in use. Trying to find an available port...")
+    case _: java.net.BindException =>
+      logger.warn(s"Port $port is already in use. Trying to find an available port...")
       serverSocket = new ServerSocket(0)
     case e: Exception =>
-      println(s"Error starting server on port $port: ${e.getMessage}")
+      logger.error(s"Error starting server on port $port: ${e.getMessage}")
       sys.exit(1)
   }
   //private var serverSocket = new ServerSocket(port)
   private val pendingClients = ListBuffer[Client]()
   @volatile private var running = false
 
-  private val gameengine = new GameEngine
+  private val gameengine = new GameEngine(logger)
   def getGameEngine: GameEngine = gameengine
   
   def getServerSocket: ServerSocket = serverSocket
 
   def start(): Unit = {
-    println(s"Server is running on port ${serverSocket.getLocalPort}...")
+    logger.info(s"Server is running on port ${serverSocket.getLocalPort}...")
     running = true
     if(serverSocket.isClosed) serverSocket = new ServerSocket(port)
     while (running) {
@@ -40,9 +42,9 @@ class ConnectionEngine(port: Int) {
         clientThread.start()
       } catch {
         case e: SocketException =>
-          println("ServerSocket closed, stopping server.")
+          logger.info("ServerSocket closed, stopping server.")
         case e: Exception =>
-          e.printStackTrace()
+          logger.error(e.getMessage)
       }
     }
   }
@@ -54,7 +56,7 @@ class ConnectionEngine(port: Int) {
     this.closeAllConections()
     
     serverSocket.close()
-    println("Server stopped.")
+    logger.info("Server stopped.")
   }
   
   private def closeAllConections(): Unit ={
@@ -69,13 +71,13 @@ class ConnectionEngine(port: Int) {
   private def handleClient(client: Client): Unit = {
     try {
       client.status = "Connected"
-      println(s"New client connected: ${client.ip}")
+      if !client.silent then logger.info(s"New client connected: ${client.ip} ${client.silent}")
       processClientMessages(client)
     } catch {
       case e: SocketException if client.socket.isClosed =>
-        println("client closed, stopping client handler.")
+        logger.info("client closed, stopping client handler.")
       case e: Exception =>
-        e.printStackTrace()
+        logger.error(e.getMessage)
     } finally {
       cleanUpClientResources(client)
     }
@@ -87,7 +89,7 @@ class ConnectionEngine(port: Int) {
     val output = client.socket.getOutputStream
     try {
       for (line <- input) {
-        println(line)
+        logger.trace(line)
         if (line.startsWith("#")) { // Only process commands starting with #
           val response = processCommand(line, client)
           sendResponse(output, response)
@@ -104,14 +106,14 @@ class ConnectionEngine(port: Int) {
   private def sendResponse(output: java.io.OutputStream, response: String): Unit = {
     output.write((response + "\r\n").getBytes)
     output.flush()
-    println(response)
+    logger.trace(response)
   }
 
   private def cleanUpClientResources(client: Client): Unit = {
     client.disconnect()
     pendingClients -= client
     gameengine.removeRole(client)
-    println(s"Client disconnected: ${client.ip}")
+    if !client.silent then logger.info(s"Client disconnected: ${client.ip}")
   }
 
   def processCommand(command: String, client: Client): String = {
@@ -120,7 +122,7 @@ class ConnectionEngine(port: Int) {
       case "#ping" => "PONG"
       case "#status" => "Server is running"
       case "#health" if parts.length == 3 => s"health:${parts(1)}/${parts(2)}"
-      case "#role" if parts.length == 2 => gameengine.registerRole(client, parts(1)); pendingClients -= client; s"Role set to ${parts(1)}"
+      case "#role" if parts.length == 2 => pendingClients -= client; gameengine.registerRole(client, parts(1));
       case "#start" => gameengine.gamestart(); ""
       case "#debug" => gameengine.debug
       case _ => gameengine.handleCommands(parts, client)

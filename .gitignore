@@ -44,3 +44,4 @@ build/
 
 ### Scala ###
 .bsp/
+/logs/

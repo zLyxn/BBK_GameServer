@@ -17,7 +17,7 @@ class Pilot(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameE
 
 
   private def hitMeteor(meteorColor: Color): Unit = {
-    println(s"Hit meteor: ${meteorColor}:${Ship.repairColor == meteorColor}")
+    gameEngine.logger.debug(s"Hit meteor: ${meteorColor}:${Ship.repairColor == meteorColor}")
     if (Ship.repairColor == meteorColor) {
       Ship.energy += Config.Ship.ENERGY_GAIN
       Ship.repairPointChance += Config.Game.REPAIRPOINTCHANCEGAIN
@@ -39,7 +39,7 @@ class Pilot(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameE
 
   private def randomSystemDown(): Unit = {
     if (Random.nextInt(100) < Config.Game.SYSTEMDOWNCHANCE) {
-      println("one System down")
+      gameEngine.logger.trace("one System down")
       val system = randomSystem()
 
       val decapitalizedSystem = gameEngine.decapitalize(system.toString)
@@ -60,5 +60,8 @@ class Pilot(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameE
 
   private def randomSystem(): System = {
     System.values(Random.nextInt(System.values.length))
+  }
+  def pushNewEnemy(): Unit = {
+    pushMessage(s"#newEnemy")
   }
 }
