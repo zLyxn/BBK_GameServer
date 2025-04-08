@@ -1,12 +1,10 @@
 package org.bbk.gameserver
 
-import com.typesafe.scalalogging.Logger
-
 import scala.collection.mutable.ListBuffer
 import scala.compiletime.ops.any.==
 import scala.util.Random
 
-class GameEngine(val logger: Logger) {
+class GameEngine {
   private type Player = Config.Player
 
   var running: Boolean = true
@@ -33,7 +31,7 @@ class GameEngine(val logger: Logger) {
   def gamewon(): Unit = ()
 
   def gameover(reason: String): Unit = {
-    logger.info("Game Over: " + reason)
+    print("Game Over: " + reason)
     sendBroadCast(s"game:over: $reason")
 
     // TODO: Ein richtiges gameover
@@ -58,7 +56,7 @@ class GameEngine(val logger: Logger) {
       case "Pilot" => Some(new Pilot(client.socket, this))
       case "WeaponsOfficer" => Some(new WeaponsOfficer(client.socket, this))
       case _ =>
-        logger.warn(s"Unknown role: $role")
+        println(s"Unknown role: $role")
         return s"error:Unknown role $role"
     }
 
@@ -82,7 +80,7 @@ class GameEngine(val logger: Logger) {
 
   def removeRole(client: Client): Client = {
     playerList = playerList.filterNot(_.socket == client.socket)
-    if !client.silent then logger.info(s"Player removed: ${client.ip}")
+    println(s"Player removed: ${client.ip}")
     client
   }
 
@@ -118,7 +116,7 @@ class GameEngine(val logger: Logger) {
   }
 
   private def startEvent(): Unit = {
-    val activeEventType: EventType = Events.startRandomEvent(this)
+    val activeEventType: EventType = Events.startRandomEvent()
     if(activeEventType != EventType.None) {
       sendCaptainMessage(_.pushEvent(activeEventType))
     }
@@ -139,7 +137,7 @@ class GameEngine(val logger: Logger) {
           val eventInterval = getEventInterval(nthEvent)
           if count >= eventInterval then {
             nthEvent += 1
-            logger.debug(s"Event triggert: $nthEvent after $count seconds")
+            println(s"Event triggert: ${nthEvent} after ${count} seconds") // Debug
             count = 0
             startEvent()
           }

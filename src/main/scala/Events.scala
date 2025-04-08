@@ -7,11 +7,11 @@ object Events {
 
   private def getInactiveEvents: List[GameEvent] = events.filterNot(_.isActive)
 
-  def startRandomEvent(gameEngine: GameEngine): EventType = {
+  def startRandomEvent(): EventType = {
     val inactiveEvents = getInactiveEvents
     if (inactiveEvents.nonEmpty) {
       val event = inactiveEvents(scala.util.Random.nextInt(inactiveEvents.length))
-      event.trigger(gameEngine)
+      event.trigger()
       return EventType.fromEvent(event)
     }
     EventType.None
