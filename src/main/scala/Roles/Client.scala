@@ -35,7 +35,6 @@ class Client(var socket: Socket, gameEngine: GameEngine) {
 
   def handleCommands(parts: Array[String]): Option[String] = {
     Some(parts.head match {
-      case "#game" => "Game triggert"
       case _ => handleRoleCommands(parts)
     })
   }
