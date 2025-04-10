@@ -5,9 +5,27 @@
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <title>Dashboard</title>
           <style>
+              :root {
+                    --background-color: #f0f0f0;
+                    --text-color: #333;
+                    --btn-background-color: #8080ff;
+                    --btn-hover-color: #3838ee;
+                    --btn-text-color: #f0f0f0;
+              }
+              @media (prefers-color-scheme: dark) {
+                  :root {
+                      --background-color: #121212; /* Dark Mode Background */
+                      --text-color: #e0e0e0;        /* Dark Mode Text */
+                      --btn-background-color: #3a3a80; /* Dark Mode Button Background */
+                      --btn-hover-color: #5050a0;      /* Dark Mode Button Hover */
+                      --btn-text-color: #f8f8f8;       /* Dark Mode Button Text */
+                  }
+              }
               body {
                   font-family: Bahnschrift, sans-serif;
                   text-align: center;
+                  background-color: var(--background-color);
+                  color: var(--text-color);
               }
               .ip{
                   font-family: Bahnschrift Condensed, sans-serif;
@@ -17,9 +35,9 @@
               .offline { color: red; }
               #commandField { display: none; }
               .btn{
-                  background-color: #8080ff;
+                  background-color: var(--btn-background-color);
                   border: none;
-                  color: white;
+                  color: var(--btn-text-color);
                   padding: 10px 12px;
                   margin: 4px 2px;
                   text-align: center;
@@ -31,7 +49,7 @@
                   width: 80%;
               }
               .btn:hover {
-                  background-color: #3838ee;
+                  background-color: var(--btn-hover-color);
               }
               .btn:active{
                   transform: translateY(4px);
@@ -74,8 +92,8 @@
                   align-items: center;
               }
               #submit {
-                  background-color: #8080ff;
-                  border: none;
+                  background-color: var(--btn-background-color);
+                  border: var(--btn-text-color);
                   color: white;
                   padding: 10px 12px;
                   text-align: center;
@@ -84,7 +102,7 @@
                   cursor: pointer;
               }
               #submit:hover {
-                  background-color: #3838ee;
+                  background-color: var(--btn-hover-color);
               }
               #submit:active {
                   transform: translateY(4px);
