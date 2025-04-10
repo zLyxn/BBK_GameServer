@@ -5,59 +5,94 @@
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <title>Dashboard</title>
           <style>
-            body {
-                font-family: Bahnschrift, sans-serif;
-                text-align: center;
-            }
-            .ip{
-                font-family: Bahnschrift Condensed, sans-serif;
-            }
-            .status { font-weight: bold; }
-            .online { color: green; }
-            .offline { color: red; }
-            #commandField { display: none; }
-            footer { position: fixed; bottom: 0; width: 100%; padding: 10px; }
-            .btn{
-                background-color: #8080ff;
-                border: none;
-                color: white;
-                padding: 10px 12px;
-                margin: 4px 2px;
-                text-align: center;
-                text-decoration: none;
-                display: inline-block;
-                font-size: 16px;
-                cursor: pointer;
-                border-radius: 100px;
-                width: 15%;
-            }
-            .btn:hover {
-                background-color: #3838ee;
-            }
-            .btn:active{
-                transform: translateY(4px);
-            }
-            hr{
-                width:25%;
-            }
-            #commandInput{
-                border-radius: 100px;
-                width: 15%;
-                padding: 10px 12px;
-                margin: 4px 2px;
-                font-family: Bahnschrift, sans-serif;
-            }
-            #commandInput::-webkit-input-placeholder {
-                font-family: Bahnschrift, sans-serif;
-            }
-            #commandInput:-ms-input-placeholder {
-                font-family: Bahnschrift, sans-serif;
-            }
-            #commandInput:-moz-placeholder {
-                font-family: Bahnschrift, sans-serif;
-            }
-
-
+              body {
+                  font-family: Bahnschrift, sans-serif;
+                  text-align: center;
+              }
+              .ip{
+                  font-family: Bahnschrift Condensed, sans-serif;
+              }
+              .status { font-weight: bold; }
+              .online { color: green; }
+              .offline { color: red; }
+              #commandField { display: none; }
+              .btn{
+                  background-color: #8080ff;
+                  border: none;
+                  color: white;
+                  padding: 10px 12px;
+                  margin: 4px 2px;
+                  text-align: center;
+                  text-decoration: none;
+                  display: inline-block;
+                  font-size: 16px;
+                  cursor: pointer;
+                  border-radius: 100px;
+                  width: 80%;
+              }
+              .btn:hover {
+                  background-color: #3838ee;
+              }
+              .btn:active{
+                  transform: translateY(4px);
+              }
+              #commandInput{
+                  padding: 10px 12px;
+                  font-family: Bahnschrift, sans-serif;
+                  width: calc(100% - 40px);
+                  box-sizing: border-box;
+              }
+              #commandInput::-webkit-input-placeholder {
+                  font-family: Bahnschrift, sans-serif;
+              }
+              #commandInput:-ms-input-placeholder {
+                  font-family: Bahnschrift, sans-serif;
+              }
+              #commandInput:-moz-placeholder {
+                  font-family: Bahnschrift, sans-serif;
+              }
+              #consoleOutput{
+                  line-height: 75%;
+                  text-align: left;
+                  width: 90%;
+                  height: 60vh;
+                  overflow-y: scroll;
+                  border: 1px solid #ccc;
+                  padding: 10px;
+                  background-color: #f9f9f9;
+                  margin-bottom: 0;
+                  box-sizing: border-box;
+              }
+              .container {
+                  display: grid;
+                  grid-template-columns: 1fr 3fr;
+                  gap: 10px;
+              }
+              .commandInputContainer{
+                  display: flex;
+                  width: 90%;
+                  align-items: center;
+              }
+              #submit {
+                  background-color: #8080ff;
+                  border: none;
+                  color: white;
+                  padding: 10px 12px;
+                  text-align: center;
+                  text-decoration: none;
+                  font-size: 16px;
+                  cursor: pointer;
+              }
+              #submit:hover {
+                  background-color: #3838ee;
+              }
+              #submit:active {
+                  transform: translateY(4px);
+              }
+              #console{
+                  margin-right: auto;
+                  margin-left: auto;
+              }
           </style>
           <script>
             if ('serviceWorker' in navigator) {
@@ -90,38 +125,81 @@
                   console.error("Error fetching status:", error);
                 });
             }
+            function updateConsoleOutput() {
+              fetch('/logs')
+                .then(response => response.text())
+                .then(consoleOutput => {
+                  const consoleDiv = document.getElementById('consoleOutput');
+                  if (consoleDiv.innerHTML.replace(/\s/g, '') !== consoleOutput.replace(/<\/?html>|<\/?body>/g, '').replace(/\s/g, '')) {
+                    consoleDiv.innerHTML = consoleOutput;
+                    consoleDiv.scrollTop = consoleDiv.scrollHeight;
+                  }
+                })
+                .catch(error => {
+                        console.error("Error sending command:", error);
+                    });
 
+            }
+            setInterval(updateConsoleOutput, 1000);
             setInterval(updateGameServerStatus, 5000);
             window.onload = updateGameServerStatus;
           </script>
         </head>
         <body>
           <h1>Welcome to the Dashboard!</h1>
-          <hr>
-          <p>Game Server: <span id="gameServerStatus" class="status">Checking...</span></p>
-          <p>Web Server: <span id="webServerStatus" class="status">Checking...</span></p>
-          <p class="ip">IP Address: $$IP$$:$$GAMEPORT$$</p>
-          <hr>
-          <a href="/start" class="btn">Start the GameServer</a><br>
-          <a href="/stop" class="btn">Stop the GameServer</a><br>
-          <a href="/exit" class="btn">Stop the WebServer</a>
-          <div id="commandField">
-              <hr>
-              <label for="commandInput">Enter command:</label>
-              <br>
-              <input type="text" id="commandInput" placeholder="Enter value">
-              <br>
-              <a id="submit" class="btn" href="#" onclick="updateLink()">Send command</a>
+          <div class="container">
+              <div id="controlField">
+                  <p>Game Server: <span id="gameServerStatus" class="status">Checking...</span></p>
+                  <p>Web Server: <span id="webServerStatus" class="status">Checking...</span></p>
+                  <p class="ip">IP Address: $$IP$$:$$GAMEPORT$$</p>
+                  <hr>
+                  <a href="/start" class="btn">Start the GameServer</a><br>
+                  <a href="/stop" class="btn">Stop the GameServer</a><br>
+                  <a href="/exit" class="btn">Stop the WebServer</a>
+                  <a href="/threads" class="btn">Show all threads</a>
+              </div>
+
+              <div id="commandField">
+                  <h2>Console:</h2>
+                  <div id="console">
+                      <pre id="consoleOutput">
+                      </pre>
+                      <div class="commandInputContainer">
+                          <input type="text" id="commandInput" placeholder="Enter Command">
+                          <a id="submit" class="" href="#">&#x21a9;</a>
+                      </div>
+                  </div>
+
+              </div>
           </div>
+
           <script>
-            function updateLink() {
-              const inputValue = document.getElementById('commandInput').value;
-              const baseUrl = '/sendCommand';
-              document.getElementById('submit').href = baseUrl + '?' + inputValue;
+              document.getElementById("commandInput").addEventListener("keypress", function(event) {
+                  if (event.key === "Enter") {
+                      event.preventDefault();
+                      document.getElementById("submit").click();
+                  }
+              });
+            document.getElementById("submit").addEventListener("click", updateLink);
+            function updateLink(event) {
+                event.preventDefault();
+                const inputValue = document.getElementById('commandInput').value;
+                const baseUrl = '/sendCommand';
+
+                fetch(baseUrl + '?' + inputValue)
+                    .then(response => {
+                        if (response.ok) {
+                            console.log("Command sent successfully");
+                            document.getElementById('commandInput').value = ''; // Clear the input field
+                        } else {
+                            console.error("Error sending command:", response.statusText);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error sending command:", error);
+                    });
+                updateConsoleOutput();
             }
           </script>
-          <footer>
-            <a href="/threads">Show all threads</a>
-          </footer>
         </body>
         </html>

@@ -29,6 +29,6 @@ object Ship {
     fields.map { field =>
       field.setAccessible(true)
       s"${field.getName}: ${field.get(this)}"
-    }.mkString("\r\n").strip()
+    }.mkString("\r\n" + " " * 12).strip()
   }
 }
