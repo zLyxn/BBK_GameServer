@@ -1,7 +1,7 @@
 package org.bbk.gameserver
 
 object Events {
-  private val events: List[GameEvent] = List(new ShieldDownEvent()) // TODO: Hier alle Events hinzufügen
+  private val events: List[GameEvent] = List(ShieldDownEvent(), AttackEvent(), WeaponsbrokenEvent(), DriveBrokenEvent()) // TODO: Hier alle Events automatisch hinzufügen
 
   def getActiveEvents: List[GameEvent] = events.filter(_.isActive)
 

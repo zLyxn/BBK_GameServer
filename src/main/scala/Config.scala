@@ -9,7 +9,7 @@ object Config {
   object Game {
     val FRIENDLYKILLALLOWED: Int = 3
     val DATAUPDATEINTERVAL: Int = 6000
-    val MAXIMUMINTERVAL: Int = 180 //180
+    val MAXIMUMINTERVAL: Int = 23 //180
     val SLOPE: Float = 0.7
     val HORIZONTALDISPLACEMENT: Int = 5
     val MINIMUMINTERVALL: Int = 30

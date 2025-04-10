@@ -2,7 +2,7 @@ package org.bbk.gameserver
 
 class ShieldDownEvent extends GameEvent{
   
-  override def finish(): Unit = isActive = false
+  override def finish(): Unit = ShieldDownEvent.setActive(false)
   probability = Some(0.9f)
   length =  Some(20)
   startTime = 10
@@ -14,4 +14,7 @@ class ShieldDownEvent extends GameEvent{
     Ship.shieldWorking = false
     gameEngine.findRole(classOf[Captain]).foreach(_.pushShield())
   }
+}
+object ShieldDownEvent extends GameEventCompanion[ShieldDownEvent] {
+  override def create(): ShieldDownEvent = new ShieldDownEvent()
 }

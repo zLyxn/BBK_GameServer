@@ -1,8 +1,12 @@
 package org.bbk.gameserver
 
+
+//TODO: Automatically generate this enum from the events
 enum EventType {
   case ShieldDownEvent
   case AttackEvent
+  case WeaponsbrokenEvent
+  case DriveBrokenEvent
   case None
 }
 

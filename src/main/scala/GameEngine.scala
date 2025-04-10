@@ -117,11 +117,12 @@ class GameEngine(val logger: Logger) {
     tickLoop()
   }
 
-  private def startEvent(): Unit = {
+  private def startEvent(): EventType = {
     val activeEventType: EventType = Events.startRandomEvent(this)
     if(activeEventType != EventType.None) {
       sendCaptainMessage(_.pushEvent(activeEventType))
     }
+    activeEventType
   }
 
   def findRole[T](role: Class[T]): ListBuffer[T] = {
@@ -141,7 +142,7 @@ class GameEngine(val logger: Logger) {
             nthEvent += 1
             logger.debug(s"Event triggert: $nthEvent after $count seconds")
             count = 0
-            startEvent()
+            logger.trace(s"Type of Event: ${startEvent().toString}")
           }
         }
       }
