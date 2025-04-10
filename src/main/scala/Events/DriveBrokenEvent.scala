@@ -5,7 +5,7 @@ class DriveBrokenEvent extends GameEvent {
   override val companion: E = DriveBrokenEvent
   override def finish(): Unit = DriveBrokenEvent.setActiveState(false)
   probability = Some(0.9f)
-  
+  solveCondition = Some(() => Ship.driveWorking)
   override def trigger(gameEngine: GameEngine): Unit = {
     super.trigger(gameEngine)
     Ship.driveWorking = false

@@ -1,11 +1,10 @@
 package org.bbk.gameserver
 
-import scala.compiletime.uninitialized
-
 
 trait GameEvent {
   type E <: GameEventCompanion[? <: GameEvent]
   protected val companion: E
+  var solveCondition: Option[() => Boolean] = None
   var startTime: Int = 0
   var length: Option[Int] = None
   var probability: Option[Float] = None
@@ -15,7 +14,10 @@ trait GameEvent {
     length match {
       case Some(l) if l <= 0 => companion.setActiveState(false)
       case Some(l) => length = Some(l - 1)
-      case None => ()
+      case None => solveCondition match {
+        case Some(condition) if condition() => companion.setActiveState(false)
+        case _ => ()
+      }
     }
   }
   def finish(): Unit = ()

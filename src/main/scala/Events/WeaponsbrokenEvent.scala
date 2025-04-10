@@ -11,6 +11,7 @@ class WeaponsbrokenEvent extends GameEvent{
     Ship.weaponsWorking = false
     gameEngine.sendCaptainMessage(_.pushWeapons())
   }
+  solveCondition = Some(() => Ship.weaponsWorking)
 }
 object WeaponsbrokenEvent extends GameEventCompanion[WeaponsbrokenEvent] {
   override def create(): WeaponsbrokenEvent = new WeaponsbrokenEvent()
