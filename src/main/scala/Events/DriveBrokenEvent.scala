@@ -1,7 +1,9 @@
 package org.bbk.gameserver
 
 class DriveBrokenEvent extends GameEvent {
-  override def finish(): Unit = DriveBrokenEvent.setActive(false)
+  type E = GameEventCompanion[DriveBrokenEvent]
+  override val companion: E = DriveBrokenEvent
+  override def finish(): Unit = DriveBrokenEvent.setActiveState(false)
   probability = Some(0.9f)
   
   override def trigger(gameEngine: GameEngine): Unit = {

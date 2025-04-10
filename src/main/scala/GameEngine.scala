@@ -136,7 +136,7 @@ class GameEngine(val logger: Logger) {
         while (running) {
           count += 1
           Thread.sleep(1000)
-          Events.solveEvents()
+          //Events.solveEvents()
           val eventInterval = getEventInterval(nthEvent)
           if count >= eventInterval then {
             nthEvent += 1

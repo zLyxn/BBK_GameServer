@@ -1,9 +1,12 @@
 package org.bbk.gameserver
 
 class WeaponsbrokenEvent extends GameEvent{
-  override def finish(): Unit =  ShieldDownEvent.setActive(false)
+  type E = GameEventCompanion[WeaponsbrokenEvent]
+  override val companion: E = WeaponsbrokenEvent
+  override def finish(): Unit =  WeaponsbrokenEvent.setActiveState(false)
   probability = Some(0.9f)
   override def trigger(gameEngine: GameEngine): Unit = {
+    super.trigger(gameEngine)
     Ship.weapons = false
     Ship.weaponsWorking = false
     gameEngine.sendCaptainMessage(_.pushWeapons())

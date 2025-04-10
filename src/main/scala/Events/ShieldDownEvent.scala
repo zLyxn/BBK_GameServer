@@ -1,8 +1,9 @@
 package org.bbk.gameserver
 
 class ShieldDownEvent extends GameEvent{
-  
-  override def finish(): Unit = ShieldDownEvent.setActive(false)
+  type E = GameEventCompanion[ShieldDownEvent]
+  override val companion: E = ShieldDownEvent
+  override def finish(): Unit = ShieldDownEvent.setActiveState(false)
   probability = Some(0.9f)
   length =  Some(20)
   startTime = 10

@@ -1,7 +1,9 @@
 package org.bbk.gameserver
 
 class AttackEvent extends GameEvent{
-  override def finish(): Unit =  AttackEvent.setActive(false)
+  type E = GameEventCompanion[AttackEvent]
+  override val companion: E = AttackEvent
+  override def finish(): Unit =  AttackEvent.setActiveState(false)
   probability = Some(0.9f)
   override def trigger(gameEngine: GameEngine): Unit = {
     super.trigger(gameEngine)
