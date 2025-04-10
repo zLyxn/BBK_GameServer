@@ -8,8 +8,10 @@
 - IntelliJ Ultimate
 - GitHub
 
-# Was tut mein Programm?
-Es gibt verschiedene Senarien und Events, welche passieren können:
+# Was macht der Server?
+Der Server verarbeitet alle Informationen, welche er von den verbundenen Clients bekommt.
+Zudem sendet er auch die passenden Daten an die Clients, welche diese Daten benötigen.
+Zusetzlich startet dieser Events, welche das Spiel zufällig beeinflussen.
 
 ## Spiele bei Clients Starten
  - Zeitbasiert
@@ -29,7 +31,8 @@ Es gibt verschiedene Senarien und Events, welche passieren können:
 ## Direkte Trigger
 - z.B. Kolision -> Schlechtere Werte -> Kapitän, Pilot
 - z.B. Abgeschossen -> Pilot freie Bahn
-- Wenn sich ein Wert updatet, alle Werte broadcasten
+- Wenn sich ein Wert updatet, diesen neu senden
+- Alle Werte werden in einem Zeitintervall gesendet.
 - Rest von Teamleitern
 
 # Struktur
@@ -89,7 +92,7 @@ Es gibt verschiedene Senarien und Events, welche passieren können:
 - Kapitän bekommt nur eine Info zum Beginn des Events
 - Das Ende des Events wird nicht gesagt, es passiert nur im Hintergrund.
 - Nach Ende des Events kann das Schild wieder aktiviert werden, es kommt aber keine Info
-### Engine out Event
+### Drive broken Event
 - Pilot kann nicht mehr fliegen
 - Ingenieur muss fixen
 - Wenn Ingenieur gelöst hat, wird NICHTS gesendet / angezeigt, der Ingenieur muss im Reallife Kommunizieren, dass das Event vorbei ist.
@@ -129,12 +132,3 @@ g(x) = (M-o)/(1+e^(k*(x-T)))+o
 - k = 0.7
 - T = 5
 - o = 30
-# Build
-## Vorbereitung
-`chrome://flags#unsafely-treat-insecure-origin-as-secure`
-### Zertifikate
-```sh
-keytool -genkeypair -alias selfsigned -keyalg RSA -keysize 2048 -validity 365 -keystore keystore.jks -dname "CN=localhost, OU=SOW, O=BBK, L=Wip, ST=NRW, C=DE" -storepass password -keypass password
-```
-Im Ressource Ordner ausführen, Standart-Passwort: `password`
-
