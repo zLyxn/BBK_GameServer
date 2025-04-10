@@ -13,6 +13,7 @@ class Pilot(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameE
   override def pushData(): Unit = {
     pushShipSpeed()
     pushMeteorAmount()
+    pushDrive()
   }
 
 
@@ -26,15 +27,18 @@ class Pilot(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameE
       randomSystemDown()
     }
   }
-  
+  @Deprecated
   def pushShipSpeed(): Unit = {
-    if(Ship.drive && Ship.driveWorking){
       pushMessage(s"#shipSpeed:${Ship.shipSpeed.value}:${Ship.shipSpeed.max}")
-    }
-    pushMessage(s"#shipSpeed:0:${Ship.shipSpeed.max}")
   }
   private def pushMeteorAmount(): Unit = {
     pushMessage(s"#meteorAmount:${Ship.meteorAmount}")
+  }
+  def pushNewEnemy(): Unit = {
+    pushMessage(s"#newEnemy")
+  }
+  def pushDrive(): Unit = {
+    pushMessage(s"#drive:${Ship.drive}")
   }
 
   private def randomSystemDown(): Unit = {
@@ -60,11 +64,5 @@ class Pilot(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameE
 
   private def randomSystem(): System = {
     System.values(Random.nextInt(System.values.length))
-  }
-  def pushNewEnemy(): Unit = {
-    pushMessage(s"#newEnemy")
-  }
-  def pushDrive(): Unit = {
-    pushMessage(s"#drive:${Ship.drive}")
   }
 }
