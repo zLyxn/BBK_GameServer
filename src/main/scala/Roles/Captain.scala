@@ -2,7 +2,7 @@ package org.bbk.gameserver
 
 import java.net.Socket
 
-class Captain(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameEngine) {
+class Captain(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameEngine, false) {
 
   private val excudedPushMethods = Set(
     "pushData",

@@ -97,10 +97,9 @@ class WebServer(connectionEngine: ConnectionEngine, val logger: Logger):
     server.createContext("/sendCommand", exchange =>
       val query: String = exchange.getRequestURI.toString
       val command: String = query.split("\\?").last.prepended('#').replace("=", "")
-      val localClient = new Client(null, connectionEngine.getGameEngine)
-      val output = connectionEngine.processCommand(command, localClient)
-      logger.debug(s"$command : $output")
-      val response = s"<html><style> body {font-family: Bahnschrift, sans-serif;text-align: center;} .btn{background-color: #8080ff;border: none;color: white;padding: 10px 12px;margin: 4px 2px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px;cursor: pointer;border-radius: 100px;width: 15%;} .btn:hover {background-color: #3838ee;} .btn:active{transform: translateY(4px);}</style></head><body><h1>Command ($command) received:</h1> ${output.replace("\r\n", "<br>")}</body><a href=\"/\" class=\"btn\">Return to dashboard</a></html>"
+      val localClient = new Client(null, connectionEngine.getGameEngine, true)
+      localClient.pushMessage(command)
+      val response = s"<html><style> body {font-family: Bahnschrift, sans-serif;text-align: center;} .btn{background-color: #8080ff;border: none;color: white;padding: 10px 12px;margin: 4px 2px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px;cursor: pointer;border-radius: 100px;width: 15%;} .btn:hover {background-color: #3838ee;} .btn:active{transform: translateY(4px);}</style></head><body><h1>Sent Command ($command)!</h1></body><a href=\"/\" class=\"btn\">Return to dashboard</a></html>"
       sendResponse(exchange, 200, response)
       localClient.disconnect()
     )

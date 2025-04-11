@@ -3,7 +3,7 @@ package org.bbk.gameserver
 import java.net.Socket
 import scala.util.Random
 
-class Pilot(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameEngine) {
+class Pilot(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameEngine, false) {
   override def handleRoleCommands(parts: Array[String]): String = {
     parts.head match {
       case "#hitmeteor" if parts.length == 2 => hitMeteor(Color.fromString(parts(1))); ""

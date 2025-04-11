@@ -2,7 +2,7 @@ package org.bbk.gameserver
 
 import java.net.Socket
 
-class Engineer(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameEngine) {
+class Engineer(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameEngine, false) {
   override def handleRoleCommands(parts: Array[String]): String = {
     parts.head match {
       case "#shield" if parts.length == 2 => setShieldState(parts(1).toBoolean); ""
