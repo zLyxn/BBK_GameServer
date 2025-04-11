@@ -61,8 +61,10 @@
               #commandInput{
                   padding: 10px 12px;
                   font-family: Bahnschrift, sans-serif;
-                  width: calc(100% - 40px);
                   box-sizing: border-box;
+                  background-color: var(--text-background);
+                  border: 1px solid var(--console-border-color);
+                  width: 100%;
               }
               #commandInput::-webkit-input-placeholder {
                   font-family: Bahnschrift, sans-serif;
@@ -79,10 +81,9 @@
                   width: 90%;
                   height: 60vh;
                   overflow-y: scroll;
-                  border: 1px solid #ccc;
+                  border: 1px solid var(--console-border-color);
                   padding: 10px;
                   background-color: var(--text-background);
-                  border-color: var(--console-border-color);
                   margin-bottom: 0;
                   box-sizing: border-box;
               }
@@ -92,25 +93,32 @@
                   gap: 10px;
               }
               .commandInputContainer{
-                  display: flex;
-                  width: 90%;
+                  display: grid;
+                  grid-template-columns: 20fr 1fr;
                   align-items: center;
+                  justify-items: center;
+                  width: 90%;
               }
               #submit {
-                  background-color: var(--btn-background-color);
-                  border: var(--btn-text-color);
-                  color: white;
-                  padding: 10px 12px;
-                  text-align: center;
-                  text-decoration: none;
-                  font-size: 16px;
-                  cursor: pointer;
-              }
+                    background-color: var(--btn-background-color);
+                    border: var(--btn-text-color);
+                    color: white;
+                    text-decoration: none;
+                    font-size: 16px;
+                    cursor: pointer;
+                    height: 100%;
+                    width: 100%;
+                    text-align: center;
+                    display: inline-grid;
+                    justify-items: center;
+                    align-items: center;
+                }
+
               #submit:hover {
                   background-color: var(--btn-hover-color);
               }
               #submit:active {
-                  transform: translateY(4px);
+                  transform: scaleX(1.25) translateX(10%);
               }
               #console{
                   margin-right: auto;
@@ -189,7 +197,12 @@
                       </pre>
                       <div class="commandInputContainer">
                           <input type="text" id="commandInput" placeholder="Enter Command">
-                          <a id="submit" class="" href="#">&#x21a9;</a>
+                          <!--<a id="submit" class="" href="#">&#x21a9;</a>-->
+                          <a id="submit" class="" href="#">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+                              <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"></path>
+                            </svg>
+                          </a>
                       </div>
                   </div>
 
