@@ -5,6 +5,7 @@ object Config {
   object Connection {
     val WEBPORT = 80
     val GAMEPORT = 9999
+    val SILENCE_LOOPBACK = true
   }
   object Game {
     val FRIENDLYKILLALLOWED: Int = 3

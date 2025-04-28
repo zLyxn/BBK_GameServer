@@ -2,7 +2,7 @@ package org.bbk.gameserver
 
 import java.net.Socket
 
-class WeaponsOfficer(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameEngine) {
+class WeaponsOfficer(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameEngine, false) {
   
   private var friendlyFireCount: Int = 0
   

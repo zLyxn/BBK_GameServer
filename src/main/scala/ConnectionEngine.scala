@@ -30,6 +30,7 @@ class ConnectionEngine(port: Int, logger: Logger) {
 
   def start(): Unit = {
     logger.info(s"Server is running on port ${serverSocket.getLocalPort}...")
+    if (Config.Connection.SILENCE_LOOPBACK) logger.info("Loopback-connections are silenced.") 
     running = true
     if(serverSocket.isClosed) serverSocket = new ServerSocket(port)
     while (running) {
