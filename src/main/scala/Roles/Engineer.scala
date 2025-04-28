@@ -60,7 +60,7 @@ class Engineer(socket: Socket, gameEngine: GameEngine) extends Client(socket, ga
     workingField.setBoolean(Ship, true)
 
     gameEngine.sendCaptainMessage({ captain =>
-      captain.getClass.getDeclaredMethod("push" + system).invoke(captain)
+      val _ = captain.getClass.getDeclaredMethod("push" + system).invoke(captain)
     })
   }
 }

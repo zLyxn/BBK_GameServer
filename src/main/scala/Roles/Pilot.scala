@@ -57,7 +57,7 @@ class Pilot(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameE
       workingField.setBoolean(Ship, false)
 
       gameEngine.sendCaptainMessage({ captain =>
-        captain.getClass.getDeclaredMethod("push" + system.toString).invoke(captain)
+        val _ = captain.getClass.getDeclaredMethod("push" + system.toString).invoke(captain)
       })
     }
   }

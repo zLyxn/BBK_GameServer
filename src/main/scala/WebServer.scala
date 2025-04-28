@@ -7,8 +7,8 @@ import com.typesafe.scalalogging.Logger
 //import com.sun.net.httpserver.HttpsConfigurator
 
 import java.net.{InetAddress, InetSocketAddress}
-import java.security.KeyStore
-import javax.net.ssl.{KeyManagerFactory, SSLContext, TrustManagerFactory}
+//import java.security.KeyStore
+//import javax.net.ssl.{KeyManagerFactory, SSLContext, TrustManagerFactory}
 import scala.io.Source
 
 

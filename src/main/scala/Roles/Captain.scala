@@ -19,7 +19,7 @@ class Captain(socket: Socket, gameEngine: GameEngine) extends Client(socket, gam
       .foreach { method =>
         try {
           if !(excudedPushMethods.contains(method.getName) || (method.getName.contains('$'))) then
-            method.invoke(this)
+            val _ = method.invoke(this)
         } catch {
           case e: Exception => gameEngine.logger.error(s"Error invoking method ${method.getName}: ${e.getMessage}")
         }

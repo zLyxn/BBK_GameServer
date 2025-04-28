@@ -220,6 +220,6 @@ class GameEngine(val logger: Logger) {
 
   def decapitalize(str: String): String = {
     if (str.isEmpty) str
-    else str.head.toLower + str.tail
+    else s"${str.head.toLower}${str.tail}"
   }
 }
