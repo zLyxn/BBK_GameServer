@@ -10,6 +10,7 @@ class Engineer(socket: Socket, gameEngine: GameEngine) extends Client(socket, ga
       case "#airSupply" if parts.length == 2 => setAirSupplyState(parts(1).toBoolean); ""
       case "#drive" if parts.length == 2 => setDrive(parts(1).toBoolean); ""
       case "#repair" if parts.length == 2 => repair(parts(1)); ""
+      case "#minigame" if parts.length == 2 => minigame(parts(1)); ""
       case _ => super.handleRoleCommands(parts)
     }
   }
@@ -22,6 +23,13 @@ class Engineer(socket: Socket, gameEngine: GameEngine) extends Client(socket, ga
     if(!state){
       gameEngine.findRole(classOf[Captain]).foreach(_.pushAirSupply())
     }
+  }
+  private def minigame(state: String): Unit = {
+    state match {
+      case "start" => Ship.energy -= Config.Ship.ENERGY_MINIGAME_LOSS
+      case "win" => Ship.repairPoints += Config.Ship.REPAIRPOINTS_MINIGAME_GAIN
+    }
+    gameEngine.sendCaptainMessage(_.pushRepairPoints())
   }
 
   override def pushData(): Unit = {

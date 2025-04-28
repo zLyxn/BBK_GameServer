@@ -28,5 +28,7 @@ object Config {
     val DAMAGE: Int = 10
     val ENERGY_GAIN: Int = 5
     val AMMO_GAIN: Int = 3
+    val ENERGY_MINIGAME_LOSS = 10
+    val REPAIRPOINTS_MINIGAME_GAIN = 1
   }
 }
