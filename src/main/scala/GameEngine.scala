@@ -44,11 +44,18 @@ class GameEngine(val logger: Logger) {
   private var playerList: ListBuffer[Player] = ListBuffer[Player]()
 
   def registerRole(client: Client, role: String): String = {
+    if (playerList.exists(_.socket == client.socket)) {
+      logger.warn(s"Client ${client.ip} already has a role")
+      return "error:Client already has a role"
+    }
+    
     if (playerList.size >= 4) {
+      logger.warn(s"All roles are assigned")
       return "error:All roles are assigned"
     }
 
     if (isAssignedRole(role)) {
+      logger.warn(s"Role $role is already assigned")
       return s"error:Role $role is already assigned"
     }
 
@@ -105,7 +112,8 @@ class GameEngine(val logger: Logger) {
   private def handlePlayerCommands(parts: Array[String], player: Player): String = {
     val commandResult = player.handleCommands(parts)
     if (commandResult.isEmpty) {
-      s"error:Unknown command:${parts.head}"
+      logger.warn(s"Unknown command: ${parts.mkString(" ")}")
+      s"error:Unknown command:${parts.mkString(" ")}"
     } else {
       commandResult.get
     }
@@ -192,7 +200,6 @@ class GameEngine(val logger: Logger) {
     if (Random.nextInt(100) < Config.Game.COREAIRLOSSCHANCE) {
       Ship.coreAir -= 1
       sendCaptainMessage(_.pushCoreAir())
-      //TODO: vielleicht zu viel Traffic
     }
   }
   
