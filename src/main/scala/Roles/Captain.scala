@@ -46,6 +46,7 @@ class Captain(socket: Socket, gameEngine: GameEngine) extends Client(socket, gam
   def pushEvent(eventType: EventType): Unit = {
     pushMessage(s"#event:${eventType}")
   }
+  @deprecated
   def pushShipSpeed(): Unit = {
     pushMessage(s"#shipSpeed:${Ship.shipSpeed.value}:${Ship.shipSpeed.max}")
   }
@@ -60,7 +61,7 @@ class Captain(socket: Socket, gameEngine: GameEngine) extends Client(socket, gam
     pushMessage(s"#repairPoints:${Ship.repairPoints}")
   }
   def pushDrive(): Unit = {
-    pushMessage(s"#drive:${Ship.drive}")
+    pushMessage(s"#drive:${Ship.drive.value}:${Ship.drive.max}")
     pushMessage(s"#driveWorking:${Ship.driveWorking}")
   }
 }

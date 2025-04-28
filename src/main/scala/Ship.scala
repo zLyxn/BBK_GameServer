@@ -3,8 +3,10 @@ package org.bbk.gameserver
 object Ship {
   val health = new Stat(100, 100)
   val energy = new Stat(100, 100)
+  @deprecated("Use drive instead")
   val shipSpeed = new Stat(100, 100)
   val coreAir = new Stat(100, 100)
+  val drive = new Stat(50, 100)
   
   var meteorAmount: Int = 0
   var repairColor: Color = Color.None
@@ -13,7 +15,6 @@ object Ship {
   var shield: Boolean = false
   var weapons: Boolean = true
   var airSupply: Boolean = true
-  var drive: Boolean = true
 
   var shieldWorking: Boolean = true
   var weaponsWorking: Boolean = true

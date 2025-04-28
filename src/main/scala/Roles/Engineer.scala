@@ -8,7 +8,7 @@ class Engineer(socket: Socket, gameEngine: GameEngine) extends Client(socket, ga
       case "#shield" if parts.length == 2 => setShieldState(parts(1).toBoolean); ""
       case "#weapons" if parts.length == 2 => setWeaponsState(parts(1).toBoolean); ""
       case "#airSupply" if parts.length == 2 => setAirSupplyState(parts(1).toBoolean); ""
-      case "#drive" if parts.length == 2 => setDrive(parts(1).toBoolean); ""
+      case "#drive" if parts.length == 2 => setDrive(parts(1).toInt); ""
       case "#repair" if parts.length == 2 => repair(parts(1)); ""
       case "#minigame" if parts.length == 2 => minigame(parts(1)); ""
       case _ => super.handleRoleCommands(parts)
@@ -42,8 +42,8 @@ class Engineer(socket: Socket, gameEngine: GameEngine) extends Client(socket, ga
     }
     gameEngine.logger.trace(s"Ship.Shield: ${Ship.shield}")
   }
-  private def setDrive(state: Boolean): Unit = {
-    Ship.drive = state
+  private def setDrive(value: Int): Unit = {
+    Ship.drive.setValue(value)
   }
 
   private def repair(system: String): Unit = {

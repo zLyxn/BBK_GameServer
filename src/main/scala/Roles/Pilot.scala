@@ -38,7 +38,7 @@ class Pilot(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameE
     pushMessage(s"#newEnemy")
   }
   def pushDrive(): Unit = {
-    pushMessage(s"#drive:${Ship.drive}")
+    pushMessage(s"#drive:${Ship.drive.value}:${Ship.drive.max}")
   }
 
   private def randomSystemDown(): Unit = {

@@ -9,7 +9,7 @@ class DriveBrokenEvent extends GameEvent {
   override def trigger(gameEngine: GameEngine): Unit = {
     super.trigger(gameEngine)
     Ship.driveWorking = false
-    Ship.drive = false
+    Ship.drive.setValue(0)
     gameEngine.findRole(classOf[WeaponsOfficer]).foreach(_.pushNewEnemy())
     gameEngine.findRole(classOf[Pilot]).foreach(_.pushDrive())
   }
