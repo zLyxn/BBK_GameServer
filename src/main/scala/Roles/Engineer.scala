@@ -47,6 +47,9 @@ class Engineer(socket: Socket, gameEngine: GameEngine) extends Client(socket, ga
   }
 
   private def repair(system: String): Unit = {
+    if (Ship.repairPoints <= 0){
+      gameEngine.logger.warn("Not enough repair points")
+    }
     Ship.repairPoints = Ship.repairPoints - 1
     gameEngine.sendCaptainMessage(_.pushRepairPoints())
 
