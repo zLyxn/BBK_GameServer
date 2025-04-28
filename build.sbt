@@ -10,3 +10,4 @@ lazy val root = (project in file("."))
     name := "GameServer",
     idePackagePrefix := Some("org.bbk.gameserver")
   )
+Global / excludeLintKeys += idePackagePrefix
