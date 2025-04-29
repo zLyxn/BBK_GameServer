@@ -1,6 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ScalaCompilerConfiguration">
-    <profile name="sbt 1" modules="GameServer,GameServer.main,GameServer.test" />
+    <option name="separateProdTestSources" value="true" />
+    <profile name="sbt 1" modules="GameServer" />
+    <profile name="sbt 2" modules="GameServer.test">
+      <option name="deprecationWarnings" value="true" />
+      <option name="uncheckedWarnings" value="true" />
+      <option name="featureWarnings" value="true" />
+      <parameters>
+        <parameter value="-Wunused:all" />
+        <parameter value="-Wvalue-discard" />
+        <parameter value="-Xsemanticdb" />
+        <parameter value="-semanticdb-target" />
+        <parameter value="C:\Users\Jonathan\IdeaProjects\BBK_GameServer\target\scala-3.6.3\test-meta" />
+      </parameters>
+    </profile>
+    <profile name="sbt 3" modules="GameServer.main">
+      <option name="deprecationWarnings" value="true" />
+      <option name="uncheckedWarnings" value="true" />
+      <option name="featureWarnings" value="true" />
+      <parameters>
+        <parameter value="-Wunused:all" />
+        <parameter value="-Wvalue-discard" />
+        <parameter value="-Xsemanticdb" />
+        <parameter value="-semanticdb-target" />
+        <parameter value="C:\Users\Jonathan\IdeaProjects\BBK_GameServer\target\scala-3.6.3\meta" />
+      </parameters>
+    </profile>
   </component>
 </project>
