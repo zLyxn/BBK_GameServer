@@ -4,7 +4,7 @@ class ShieldDownEvent extends GameEvent{
   type E = GameEventCompanion[ShieldDownEvent]
   override val companion: E = ShieldDownEvent
   override def finish(): Unit = ShieldDownEvent.setActiveState(false)
-  probability = Some(0.9f)
+  probability = None
   length =  Some(20)
   startTime = 10
 

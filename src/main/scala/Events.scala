@@ -9,14 +9,22 @@ object Events {
 
 
   def startRandomEvent(gameEngine: GameEngine): EventType = {
-    //println(s"BEFORE!! Active: ${getActiveEvents.map(_.getClass.getSimpleName)}              Inactive: ${getInactiveEvents.map(_.getClass.getSimpleName)}")
-    solveEvents() //TODO move this to the game engine
+    solveEvents()
     val inactiveEvents = getInactiveEvents
     if (inactiveEvents.nonEmpty) {
-      val event = inactiveEvents(scala.util.Random.nextInt(inactiveEvents.length))
-      event.trigger(gameEngine)
-      //println(s"AFTER:: Active: ${getActiveEvents.map(_.getClass.getSimpleName)}              Inactive: ${getInactiveEvents.map(_.getClass.getSimpleName)}")
-      return EventType.fromEvent(event)
+      val eventProbabilities: List[(GameEvent, Float)] = inactiveEvents.map(e => e -> e.probability.getOrElse(1.0f / inactiveEvents.size))
+      val totalProbability: Float = eventProbabilities.map(_._2).sum
+      val rand: Float = scala.util.Random.nextFloat() * totalProbability
+      var cumulative: Float = 0.0f
+      val event: Option[GameEvent] = eventProbabilities.find { case (_, prob) =>
+        cumulative += prob
+        rand < cumulative
+      }.map(_._1)
+      if (event.isEmpty) {
+        return EventType.None
+      }
+      event.get.trigger(gameEngine)
+      return EventType.fromEvent(event.get)
     }
     EventType.None
   }

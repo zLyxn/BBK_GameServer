@@ -4,7 +4,7 @@ class WeaponsbrokenEvent extends GameEvent{
   type E = GameEventCompanion[WeaponsbrokenEvent]
   override val companion: E = WeaponsbrokenEvent
   override def finish(): Unit =  WeaponsbrokenEvent.setActiveState(false)
-  probability = Some(0.9f)
+  probability = None
   override def trigger(gameEngine: GameEngine): Unit = {
     super.trigger(gameEngine)
     Ship.weapons = false

@@ -4,7 +4,7 @@ class AttackEvent extends GameEvent{
   type E = GameEventCompanion[AttackEvent]
   override val companion: E = AttackEvent
   override def finish(): Unit =  AttackEvent.setActiveState(false)
-  probability = Some(0.9f)
+  probability = None
   override def trigger(gameEngine: GameEngine): Unit = {
     super.trigger(gameEngine)
     gameEngine.findRole(classOf[Pilot]).foreach(_.pushNewEnemy())
