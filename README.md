@@ -132,3 +132,96 @@ g(x) = (M-o)/(1+e^(k*(x-T)))+o
 - k = 0.7
 - T = 5
 - o = 30
+
+# Netzwerkbefehle
+## Server
+**Sendet (an alle):**
+- `#game:start`  
+  Das Spiel startet JETZT  
+- `#game:over:<Begründung: String>`  
+  Das Spiel wurde verloren  
+- `#game:won`  
+  Das Spiel wurde gewonnen  
+
+**Empfängt (von vielen):**
+- `#role:<Rolle>`  
+  Damit legt man die Rolle des Clients fest, jeder muss diesen Befehl nach der Verbindung triggern  
+
+---
+
+## Kapitän
+**Sendet:**
+- `#role:Captain`
+
+**Empfängt:**
+- `#health:<current>:<max>`  
+  Aktuelle und maximale Leben  
+- `#shield:<boolean>`  
+  Schildstatus (true/false)  
+- `#repaircolor:<color/none>`  
+  Farbe für Reparatur oder `none`  
+- `#energy:<current>:<max>`  
+  Aktuelle Energie  
+- `#event:<Event>`  
+  Aktuelles Event  
+- `#drive:<current>:<max>`  
+  Geschwindigkeit des Schiffs  
+- `#coreAir:<current>:<max>`  
+  Restliche Luft im Schiff  
+- `#repairPoints:<Value>`  
+  Verfügbare Reparaturpunkte  
+- `#weapons:<Boolean>`  
+  Waffenstatus  
+- `#pushAirSupply:<Boolean>`  
+  Luftversorgung aktiv/kaputt  
+- `#drive:<Boolean>`  
+  Pilot kann fliegen oder nicht  
+
+---
+
+## Ingenieur
+**Sendet:**
+- `#role:Engineer`
+- `#shield:<boolean>`
+- `#airSupply:<boolean>`
+- `#drive:<int (in %)>`
+- `#weapons:<boolean>`
+- `#minigame:<start/win>`  
+  - `start`: Minigame gestartet (−10 Energie)  
+  - `win`: Minigame gewonnen (+1 Reparaturpunkt)  
+- `#repair:<shield/weapons/airsupply/drive>`  
+  25% Chance bei Schaden, dass System kaputt geht  
+
+**Empfängt:**  nichts
+
+---
+
+## Pilot
+**Sendet:**
+- `#role:Pilot`
+- `#hitmeteor:<Color>`  
+  Meteor getroffen mit Farbe `<Color>`  
+
+**Empfängt:**
+- `#drive:<current>:<max>`  
+  Geschwindigkeit vom Ingenieur  
+- `#meteorAmount:<number>`  
+  Anzahl abgeschossener Meteoren (Score)  
+- `#newEnemy`  
+  Neuer Gegner erscheint  
+- `#drive:<Int (in %)>`  
+ Geschwindigkeit
+
+## Waffenoffizier
+**Sendet:**
+- `#role:WeaponsOfficer`
+- `#shoot:<Type>:<optional[color]>`  
+  Type: meteor / Lootbox (good / bad – 50/50) / Spaceship (good / bad)
+
+**Empfängt:**
+- `#ammo:<Anzahl>`  
+  Anzahl der verfügbaren Munition. Wenn Munition = 0, kann nicht mehr geschossen werden.
+- `#newEnemy`  
+  Erzeugt einen neuen Gegner, den man abschießen muss
+- `#weapons:<Boolean>`  
+  true: Waffen funktionieren, false: Waffen sind kaputt
