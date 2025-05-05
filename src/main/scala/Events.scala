@@ -1,38 +1,22 @@
 package org.bbk.gameserver
 
 import com.typesafe.scalalogging.Logger
+import scala.reflect.runtime.universe
 
 object Events {
-  //private val events_old: List[GameEvent] = List(ShieldDownEvent(), AttackEvent(), WeaponsbrokenEvent(), DriveBrokenEvent()) // TODO: Hier alle Events automatisch hinzufügen
+  private val events: List[GameEvent] = List(ShieldDownEvent(), AttackEvent(), WeaponsbrokenEvent(), DriveBrokenEvent()) // TODO: Hier alle Events automatisch hinzufügen
+
+  val mirror = universe.runtimeMirror(getClass.getClassLoader)
+  val eventClasses = mirror.staticModule("org.bbk.gameserver.Events").info.decls
+    .collect {
+      case symbol if symbol.isClass && symbol.name.toString.endsWith("Event") =>
+        mirror.reflectClass(symbol.asClass).reflectConstructor(symbol.asClass.primaryConstructor.asMethod)()
+    }
+    .toList
+  assert(events == eventClasses, "Wrong Events loaded! Please check the events list.")
 
   var logger: Option[Logger] = None
 
-  private val events: List[GameEvent] = {
-    val packageName = "org.bbk.gameserver.events"
-    val excludedClasses = Set("GameEvent", "GameEventCompanion") // Falls bestimmte Klassen ausgeschlossen werden sollen
-    val runtimeMirror = scala.reflect.runtime.universe.runtimeMirror(getClass.getClassLoader)
-    val packageSymbol = runtimeMirror.staticPackage(packageName)
-
-    packageSymbol.info.decls
-      .filter(_.isClass)
-      .map(_.asClass)
-      .filterNot(cls => excludedClasses.contains(cls.name.toString))
-      .filter(cls => cls.name.toString.endsWith("Event"))
-      .flatMap { cls =>
-        try {
-          val clazz = runtimeMirror.runtimeClass(cls)
-          if (classOf[GameEvent].isAssignableFrom(clazz)) {
-            Some(clazz.getDeclaredConstructor().newInstance().asInstanceOf[GameEvent])
-          } else None
-        } catch {
-          case e: Exception =>
-            if logger.isDefined then logger.get.error("Error loading event class: " + cls.name + ": " + e.getMessage)
-            println("Error loading event class: " + cls.name + ": " + e.getMessage)
-            None
-        }
-      }
-      .toList
-  }
   if logger.isDefined then logger.get.debug("Events loaded: " + events.map(_.getClass.getSimpleName).mkString(", "))
   println("Debug: Events loaded: " + events.map(_.getClass.getSimpleName).mkString(", "))
 
