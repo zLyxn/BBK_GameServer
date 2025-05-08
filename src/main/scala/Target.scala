@@ -4,6 +4,7 @@ enum Target {
   case Meteor
   case Ship(color: Color)
   case Lootbox
+  case Enemy
   case None
 }
 

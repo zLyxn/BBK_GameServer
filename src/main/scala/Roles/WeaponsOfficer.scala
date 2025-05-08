@@ -26,6 +26,7 @@ class WeaponsOfficer(socket: Socket, gameEngine: GameEngine) extends Client(sock
         case Target.Meteor => Ship.meteorAmount -= 1
         case Target.Ship(color) => hitShip(color)
         case Target.Lootbox => Ship.energy += Config.Ship.ENERGY_GAIN
+        case Target.Enemy => enemyKill()//TODO: Command mit WepponsOfficer absprchen
         case Target.None => ()
       }
     }
@@ -35,7 +36,11 @@ class WeaponsOfficer(socket: Socket, gameEngine: GameEngine) extends Client(sock
   private def pushAmmo(): Unit = {
     pushMessage(s"#ammo:${Ship.ammo}")
   }
-
+  
+  private def enemyKill(): Unit = {
+    gameEngine.sendPilotMessage(_.pushEnemyKill())
+  }
+  
   private def hitShip(color: Color): Unit = {
     if (color == Ship.friendlyColor) {
       if(friendlyFireCount <= Config.Game.FRIENDLYKILLALLOWED){

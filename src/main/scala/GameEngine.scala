@@ -214,6 +214,9 @@ class GameEngine(val logger: Logger) {
   def sendCaptainMessage(action: Captain => Unit): Unit = {
     findRole(classOf[Captain]).foreach(action)
   }
+  def sendPilotMessage(action: Pilot => Unit): Unit = {
+    findRole(classOf[Pilot]).foreach(action)
+  }
   private def sendBroadCast(text: String): Unit = {
     playerList.foreach(_.pushMessage(text))
   }
