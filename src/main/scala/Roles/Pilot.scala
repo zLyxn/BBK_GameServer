@@ -38,7 +38,7 @@ class Pilot(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameE
     pushMessage(s"#newEnemy")
   }
   def pushEnemyKill(): Unit = {
-    pushMessage(s"#enemyKill")
+    pushMessage(s"#enemyKilled")
   }
   def pushDrive(): Unit = {
     pushMessage(s"#drive:${Ship.drive.value}:${Ship.drive.max}")
