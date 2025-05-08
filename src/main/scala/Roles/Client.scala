@@ -19,7 +19,7 @@ class Client(var socket: Socket, gameEngine: GameEngine) {
       }
     } catch {
       case e: IOException =>
-        gameEngine.logger.error(e.getMessage)
+        gameEngine.logger.error("Unexpected error:" + e.getMessage)
     }
   }
   
