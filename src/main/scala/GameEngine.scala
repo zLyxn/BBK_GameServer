@@ -7,6 +7,7 @@ import scala.compiletime.ops.any.==
 import scala.util.Random
 
 class GameEngine(val logger: Logger) {
+  Events.initEvents()
   private type Player = Config.Player
 
   var running: Boolean = true
