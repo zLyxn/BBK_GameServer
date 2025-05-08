@@ -209,14 +209,14 @@ g(x) = (M-o)/(1+e^(k*(x-T)))+o
   Anzahl abgeschossener Meteoren (Score)  
 - `#newEnemy`  
   Neuer Gegner erscheint  
-- `#drive:<Int (in %)>`  
- Geschwindigkeit
+ - `#enemyKilled`
+Der Gegner wurde gekillt
 
 ## Waffenoffizier
 **Sendet:**
 - `#role:WeaponsOfficer`
 - `#shoot:<Type>:<optional[color]>`  
-  Type: meteor / Lootbox (good / bad – 50/50) / Spaceship (good / bad)
+  Type: meteor / Lootbox (good / bad – 50/50) / Spaceship (good / bad) / enemyKilled
 
 **Empfängt:**
 - `#ammo:<Anzahl>`  
