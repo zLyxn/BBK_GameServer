@@ -12,7 +12,7 @@
         <parameter value="-Wvalue-discard" />
         <parameter value="-Xsemanticdb" />
         <parameter value="-semanticdb-target" />
-        <parameter value="C:\Users\Jonathan\IdeaProjects\BBK_GameServer\target\scala-3.6.3\test-meta" />
+        <parameter value="C:\Users\mikav\IdeaProjects\GameServer\target\scala-3.6.3\test-meta" />
       </parameters>
     </profile>
     <profile name="sbt 3" modules="GameServer.main">
@@ -24,7 +24,7 @@
         <parameter value="-Wvalue-discard" />
         <parameter value="-Xsemanticdb" />
         <parameter value="-semanticdb-target" />
-        <parameter value="C:\Users\Jonathan\IdeaProjects\BBK_GameServer\target\scala-3.6.3\meta" />
+        <parameter value="C:\Users\mikav\IdeaProjects\GameServer\target\scala-3.6.3\meta" />
       </parameters>
     </profile>
   </component>

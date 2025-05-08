@@ -1,28 +1,38 @@
 package org.bbk.gameserver
 
 import com.typesafe.scalalogging.Logger
-import scala.reflect.runtime.universe
+import io.github.classgraph.ClassGraph
+import scala.jdk.CollectionConverters._
 
 object Events {
-  private val events: List[GameEvent] = List(ShieldDownEvent(), AttackEvent(), WeaponsbrokenEvent(), DriveBrokenEvent()) // TODO: Hier alle Events automatisch hinzufügen
-
-  val mirror = universe.runtimeMirror(getClass.getClassLoader)
-  val eventClasses = mirror.staticModule("org.bbk.gameserver.Events").info.decls
-    .collect {
-      case symbol if symbol.isClass && symbol.name.toString.endsWith("Event") =>
-        mirror.reflectClass(symbol.asClass).reflectConstructor(symbol.asClass.primaryConstructor.asMethod)()
+  private var events: Option[List[GameEvent]] = None
+  
+  def initEvents(): Unit = {
+    if (events.isDefined) {
+      logger.get.warn("Events already initialized")
+      return
     }
-    .toList
-  assert(events == eventClasses, "Wrong Events loaded! Please check the events list.")
+    val scanResult = new ClassGraph()
+      .enableClassInfo()
+      .acceptPackages("org.bbk.gameserver")
+      .scan()
 
+    this.events = Some(scanResult
+      .getClassesImplementing("org.bbk.gameserver.GameEvent")
+      .asScala
+      .toList
+      .map(classInfo => Class.forName(classInfo.getName).getDeclaredConstructor().newInstance().asInstanceOf[GameEvent])
+    )
+  }
+  
   var logger: Option[Logger] = None
 
   if logger.isDefined then logger.get.debug("Events loaded: " + events.map(_.getClass.getSimpleName).mkString(", "))
   println("Debug: Events loaded: " + events.map(_.getClass.getSimpleName).mkString(", "))
 
-  def getActiveEvents: List[GameEvent] = events.filter(_.isActive)
+  def getActiveEvents: List[GameEvent] = events.get.filter(_.isActive)
 
-  private def getInactiveEvents: List[GameEvent] = events.filterNot(_.isActive)
+  private def getInactiveEvents: List[GameEvent] = events.get.filterNot(_.isActive)
 
 
   def startRandomEvent(gameEngine: GameEngine): EventType = {
