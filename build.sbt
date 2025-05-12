@@ -1,4 +1,4 @@
-ThisBuild / version := "1.0-PRERELEASE-2"
+ThisBuild / version := "1.0-PRERELEASE-3"
 
 ThisBuild / scalaVersion := "3.6.3"
 ThisBuild / semanticdbEnabled := true
