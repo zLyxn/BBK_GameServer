@@ -15,7 +15,13 @@ libraryDependencies += "io.github.classgraph" % "classgraph" % "4.8.179"
 lazy val root = (project in file("."))
   .settings(
     name := "GameServer",
-    idePackagePrefix := Some("org.bbk.gameserver")
+    idePackagePrefix := Some("org.bbk.gameserver"),
+    assemblyMergeStrategy := {
+      case PathList("META-INF", "versions", _*) => MergeStrategy.discard
+      case "module-info.class"                     => MergeStrategy.discard
+      case x                                       => MergeStrategy.first
+    },
+    mainClass := Some("org.bbk.gameserver.Main")
   )
 Global / excludeLintKeys += idePackagePrefix
 
