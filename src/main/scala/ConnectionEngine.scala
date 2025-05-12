@@ -44,7 +44,7 @@ class ConnectionEngine(port: Int, logger: Logger) {
         case e: SocketException =>
           logger.info("ServerSocket closed, stopping server.")
         case e: Exception =>
-          logger.error(e.getMessage)
+          logger.error("Unexpected error:" + e.getMessage)
       }
     }
   }
@@ -77,7 +77,7 @@ class ConnectionEngine(port: Int, logger: Logger) {
       case e: SocketException if client.socket.isClosed =>
         logger.info("client closed, stopping client handler.")
       case e: Exception =>
-        logger.error(e.getMessage)
+        logger.error("Unexpected error:" + e.getMessage)
     } finally {
       cleanUpClientResources(client)
     }
