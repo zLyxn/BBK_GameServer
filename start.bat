@@ -23,5 +23,5 @@ if not defined JAR_FILE (
 )
 
 echo Starte %JAR_FILE%
-java -jar "%JAR_FILE%"
+java -cp "%JAR_FILE%" org.bbk.gameserver.Main
 pause
