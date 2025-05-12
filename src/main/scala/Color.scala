@@ -5,11 +5,11 @@ enum Color {
   case Blue
   case Green
   case Yellow
-  case Purple
-  case Orange
-  case Black
-  case White
-  case Grey
+  //case Purple
+  //case Orange
+  //case Black
+  //case White
+  //case Grey
   case None
 
   def asString: String = this.toString
