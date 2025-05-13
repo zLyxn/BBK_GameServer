@@ -53,7 +53,12 @@ class Pilot(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameE
 
       val field = Ship.getClass.getDeclaredField(decapitalizedSystem)
       field.setAccessible(true)
-      field.setBoolean(Ship, false)
+      if (field.toString.contains("drive")) {
+        Ship.drive.setValue(0)
+      }else {
+        field.setBoolean(Ship, false)
+      }
+
 
       val workingField = Ship.getClass.getDeclaredField(decapitalizedSystem + "Working")
       workingField.setAccessible(true)
