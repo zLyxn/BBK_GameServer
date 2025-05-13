@@ -218,8 +218,9 @@ class GameEngine(val logger: Logger) {
   def sendPilotMessage(action: Pilot => Unit): Unit = {
     findRole(classOf[Pilot]).foreach(action)
   }
-  private def sendBroadCast(text: String): Unit = {
-    playerList.foreach(_.pushMessage(text))
+  private def sendBroadCast(text: String, prefix: String = "#"): Unit = {
+    playerList.foreach(_.pushMessage(prefix + text))
+    logger.trace(s"Broadcast: $prefix$text")
   }
 
   def decapitalize(str: String): String = {

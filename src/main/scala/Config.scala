@@ -17,7 +17,7 @@ object Config {
     val COREAIRLOSSCHANCE: Int = 25
     val REPAIRPOINTCHANCELOSS: Int = 2
     val REPAIRPOINTCHANCEGAIN: Int = 1
-    val SYSTEMDOWNCHANCE: Int = 100
+    val SYSTEMDOWNCHANCE: Int = 25
     object Deathmessages {
       val FRIENDLYFIRE: String = "3 Friendly Ships killed"
       val SUFFOCATED: String = "Suffocated"
