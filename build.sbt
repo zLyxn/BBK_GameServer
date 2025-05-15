@@ -33,5 +33,10 @@ scalacOptions ++= Seq(
   "-Wvalue-discard"    // warn about ignored non-Unit results
 )
 
+assembly / mainClass := Some("org.bbk.gameserver.Main")
+assembly / assemblyMergeStrategy := {
+  case PathList("META-INF", _*) => MergeStrategy.discard
+  case _ => MergeStrategy.first
+}
 
 enablePlugins(ScalafixPlugin)

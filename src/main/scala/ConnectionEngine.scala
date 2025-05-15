@@ -117,7 +117,7 @@ class ConnectionEngine(port: Int, logger: Logger) {
   }
 
   def processCommand(command: String, client: Client): String = {
-    val parts = command.stripSuffix("\r\n").split(":") // Remove \r\n and split
+    val parts = command.toLowerCase.stripSuffix("\r\n").split(":") // Remove \r\n and split
     parts.head match {
       case "#ping" => "PONG"
       case "#status" => "Server is running"
@@ -125,6 +125,7 @@ class ConnectionEngine(port: Int, logger: Logger) {
       case "#role" if parts.length == 2 => pendingClients -= client; gameengine.registerRole(client, parts(1));
       case "#start" => gameengine.gamestart(); ""
       case "#debug" => gameengine.debug
+      case "#sendBroadcast" if parts.length == 2 => gameengine.sendBroadCast(parts(1)); ""
       case _ => gameengine.handleCommands(parts, client)
     }
   }

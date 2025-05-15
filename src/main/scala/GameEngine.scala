@@ -61,10 +61,10 @@ class GameEngine(val logger: Logger) {
     }
 
     val player: Option[Player] = role match {
-      case "Captain" => Some(new Captain(client.socket, this))
-      case "Engineer" => Some(new Engineer(client.socket, this))
-      case "Pilot" => Some(new Pilot(client.socket, this))
-      case "WeaponsOfficer" => Some(new WeaponsOfficer(client.socket, this))
+      case "captain" => Some(new Captain(client.socket, this))
+      case "engineer" => Some(new Engineer(client.socket, this))
+      case "pilot" => Some(new Pilot(client.socket, this))
+      case "weaponsofficer" => Some(new WeaponsOfficer(client.socket, this))
       case _ =>
         logger.warn(s"Unknown role: $role")
         return s"error:Unknown role $role"
@@ -76,10 +76,10 @@ class GameEngine(val logger: Logger) {
 
   private def isAssignedRole(role: String): Boolean = {
     role match {
-      case "Captain" => playerList.exists(_.isInstanceOf[Captain])
-      case "Engineer" => playerList.exists(_.isInstanceOf[Engineer])
-      case "Pilot" => playerList.exists(_.isInstanceOf[Pilot])
-      case "WeaponsOfficer" => playerList.exists(_.isInstanceOf[WeaponsOfficer])
+      case "captain" => playerList.exists(_.isInstanceOf[Captain])
+      case "engineer" => playerList.exists(_.isInstanceOf[Engineer])
+      case "pilot" => playerList.exists(_.isInstanceOf[Pilot])
+      case "weaponsofficer" => playerList.exists(_.isInstanceOf[WeaponsOfficer])
       case _ => false
     }
   }
@@ -218,7 +218,7 @@ class GameEngine(val logger: Logger) {
   def sendPilotMessage(action: Pilot => Unit): Unit = {
     findRole(classOf[Pilot]).foreach(action)
   }
-  private def sendBroadCast(text: String, prefix: String = "#"): Unit = {
+  def sendBroadCast(text: String, prefix: String = "#"): Unit = {
     playerList.foreach(_.pushMessage(prefix + text))
     logger.trace(s"Broadcast: $prefix$text")
   }
