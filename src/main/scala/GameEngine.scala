@@ -107,6 +107,7 @@ class GameEngine(val logger: Logger) {
     player match {
       case Some(p) => handlePlayerCommands(parts, p)
       case None => s"Player not found for client: ${client.ip}"
+      case _: Any => s"error:Player not found for client: ${client.ip}"
     }
   }
 

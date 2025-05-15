@@ -28,6 +28,7 @@ class Engineer(socket: Socket, gameEngine: GameEngine) extends Client(socket, ga
     state match {
       case "start" => Ship.energy -= Config.Ship.ENERGY_MINIGAME_LOSS
       case "win" => Ship.repairPoints += Config.Ship.REPAIRPOINTS_MINIGAME_GAIN
+      case _ => gameEngine.logger.warn("Unknown minigame state: " + state)
     }
     gameEngine.sendCaptainMessage(_.pushRepairPoints())
   }
@@ -47,6 +48,11 @@ class Engineer(socket: Socket, gameEngine: GameEngine) extends Client(socket, ga
   }
 
   private def repair(system: String): Unit = {
+    
+    if (!System.values.contains(System.fromString(system))) {
+      gameEngine.logger.warn(s"Unknown system: $system")
+      return
+    }
     if (Ship.repairPoints <= 0){
       gameEngine.logger.warn("Not enough repair points")
       return

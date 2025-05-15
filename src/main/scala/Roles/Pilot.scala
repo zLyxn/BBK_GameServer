@@ -46,8 +46,8 @@ class Pilot(socket: Socket, gameEngine: GameEngine) extends Client(socket, gameE
 
   private def randomSystemDown(): Unit = {
     if (Random.nextInt(100) < Config.Game.SYSTEMDOWNCHANCE) {
-      gameEngine.logger.trace("one System down")
       val system = randomSystem()
+      gameEngine.logger.trace("System down: " + system.toString)
 
       val decapitalizedSystem = gameEngine.decapitalize(system.toString)
 
