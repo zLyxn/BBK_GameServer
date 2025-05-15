@@ -28,6 +28,7 @@ class GameEngine(val logger: Logger) {
   def gamestart(): Unit = {
     gameLoop()
     sendBroadCast("game:start")
+    logger.info("Game started")
   }
   
   def gamedone(): Unit = ()
@@ -40,6 +41,11 @@ class GameEngine(val logger: Logger) {
     // TODO: Ein richtiges gameover
     //  mit beenden des spiels
     //  und der Option ein neues Spiel zu starten
+    running = false
+
+    logger.debug("Ship old: " + Ship.toString)
+    Ship.reset()
+    logger.debug("Ship reset: " + Ship.toString)
   }
   
   private var playerList: ListBuffer[Player] = ListBuffer[Player]()
