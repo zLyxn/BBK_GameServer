@@ -125,7 +125,7 @@ class ConnectionEngine(port: Int, logger: Logger) {
       case "#role" if parts.length == 2 => pendingClients -= client; gameengine.registerRole(client, parts(1));
       case "#start" => gameengine.gamestart(); ""
       case "#debug" => gameengine.debug
-      case "#sendBroadcast" if parts.length == 2 => gameengine.sendBroadCast(parts(1)); ""
+      case "#sendBroadcast" if (parts.length == 2 && client.socket.getInetAddress.isLoopbackAddress) => gameengine.sendBroadCast(parts(1)); ""
       case _ => gameengine.handleCommands(parts, client)
     }
   }
