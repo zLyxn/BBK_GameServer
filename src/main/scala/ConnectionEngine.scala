@@ -125,8 +125,8 @@ class ConnectionEngine(port: Int, logger: Logger) {
       case "#role" if parts.length == 2 => pendingClients -= client; gameengine.registerRole(client, parts(1));
       case "#start" => gameengine.gamestart(); ""
       case "#debug" => gameengine.debug
-      case "#sendBroadcast" if client.socket.getInetAddress.isLoopbackAddress => {
-        if (parts.length == 2) gameengine.sendBroadCast(parts(1))
+      case "#sendbroadcast" if client.socket.getInetAddress.isLoopbackAddress => {
+        if parts.length == 2 then gameengine.sendBroadCast(parts(1))
         else if parts.length == 3 then gameengine.sendBroadCast(parts(1), parts(2))
         else gameengine.sendBroadCast("BROADCAST", "TEST-")
       };""
