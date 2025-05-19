@@ -135,7 +135,7 @@ class WebServer(connectionEngine: ConnectionEngine, val logger: Logger):
       .replaceAll("WARN", "<span style=\"color:orange;\">$0</span>")
       .replaceAll("ERROR", "<span style=\"color:red;\">$0</span>")
       .replaceAll("(?i)(https?://\\S+)", "<a href=\"$1\">$1</a>")
-      .replaceAll("#[a-zA-Z0-9_:]+", "<span style=\"color:Silver; text-decoration: teal wavy underline overline;\">$0</span>")
+      .replaceAll("#[a-zA-Z0-9_:]+", "<span style=\"color: ghostwhite; background-color: dimgrey;\">$0</span>")
 
     finally source.close()
   }
