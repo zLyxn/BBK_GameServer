@@ -106,7 +106,7 @@ class ConnectionEngine(port: Int, logger: Logger) {
   private def sendResponse(output: java.io.OutputStream, response: String): Unit = {
     output.write((response + "\r\n").getBytes)
     output.flush()
-    logger.trace(response)
+    logger.trace("Sent: " + (if response.isBlank then "[Empty]" else response))
   }
 
   private def cleanUpClientResources(client: Client): Unit = {

@@ -10,6 +10,7 @@ class WeaponsOfficer(socket: Socket, gameEngine: GameEngine) extends Client(sock
     parts.head match {
       case "#shoot" if parts.length == 2 => shoot(Target.toTarget(parts(1), Color.None)); ""
       case "#shoot" if parts.length == 3 => shoot(Target.toTarget(parts(1), Color.fromString(parts(2)))); ""
+      case "#danger" => Ship.ammo += 100; ""
       case _ => super.handleRoleCommands(parts)
     }
   }
