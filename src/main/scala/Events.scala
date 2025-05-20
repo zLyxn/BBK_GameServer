@@ -28,7 +28,6 @@ object Events {
   var logger: Option[Logger] = None
 
   if logger.isDefined then logger.get.debug("Events loaded: " + events.map(_.getClass.getSimpleName).mkString(", "))
-  println("Debug: Events loaded: " + events.map(_.getClass.getSimpleName).mkString(", "))
 
   def getActiveEvents: List[GameEvent] = events.get.filter(_.isActive)
 
