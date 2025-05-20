@@ -19,11 +19,7 @@ class GameEngine(val logger: Logger) {
             nthEvent: $nthEvent
             EventInterval: ${getEventInterval(nthEvent)}
       """
-      /*RESISTANCE: ${Config.Ship.RESISTANCE}
-      DAMAGE: ${Config.Ship.DAMAGE}
-      ENERGY_GAIN: ${Config.Ship.ENERGY_GAIN}*/
   }
-  
   
   def gamestart(): Unit = {
     gameLoop()
@@ -42,11 +38,13 @@ class GameEngine(val logger: Logger) {
     // TODO: Ein richtiges gameover
     //  mit beenden des spiels
     //  und der Option ein neues Spiel zu starten
-    running = false
+    gameReset()
+  }
 
-    logger.debug("Ship old: " + Ship.toString)
+  def gameReset(): Unit = {
+    nthEvent = 0
     Ship.reset()
-    logger.debug("Ship reset: " + Ship.toString)
+    running = false
   }
   
   private var playerList: ListBuffer[Player] = ListBuffer[Player]()
@@ -157,9 +155,10 @@ class GameEngine(val logger: Logger) {
           val eventInterval = getEventInterval(nthEvent)
           if count >= eventInterval then {
             nthEvent += 1
+            val start: String = startEvent().toString
             logger.debug(s"Event triggert: $nthEvent after $count seconds")
             count = 0
-            logger.trace(s"Type of Event: ${startEvent().toString}")
+            logger.trace(s"Type of Event: ${start}")
           }
         }
       }

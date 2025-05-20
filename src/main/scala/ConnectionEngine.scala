@@ -133,7 +133,7 @@ class ConnectionEngine(port: Int, logger: Logger) {
         else if parts.length == 3 then gameengine.sendBroadCast(parts(1), parts(2))
         else gameengine.sendBroadCast("BROADCAST", "TEST-")
       };""
-      case "#reset" if client.socket.getInetAddress.isLoopbackAddress => Ship.reset(); ""
+      case "#reset" if client.socket.getInetAddress.isLoopbackAddress => gameengine.gameReset(); ""
       case _ => gameengine.handleCommands(parts, client)
     }
   }
