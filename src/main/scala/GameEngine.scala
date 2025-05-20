@@ -29,6 +29,7 @@ class GameEngine(val logger: Logger) {
     gameLoop()
     sendBroadCast("game:start")
     logger.info("Game started")
+    running = true
   }
   
   def gamedone(): Unit = ()
@@ -36,7 +37,7 @@ class GameEngine(val logger: Logger) {
 
   def gameover(reason: String): Unit = {
     logger.info("Game Over: " + reason)
-    sendBroadCast(s"game:over: $reason")
+    sendBroadCast(s"game:over:$reason")
 
     // TODO: Ein richtiges gameover
     //  mit beenden des spiels
