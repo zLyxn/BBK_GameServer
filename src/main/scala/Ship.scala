@@ -72,7 +72,7 @@ object Ship {
   override def toString: String = {
     val fields = this.getClass.getDeclaredFields
       .filterNot(_.getName.contains("$"))
-      //.filterNot(_.getName == "initialStates")
+      .filterNot(_.getName == "initialStates")
 
     fields.map { field =>
       field.setAccessible(true)
